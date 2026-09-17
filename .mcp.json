@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "hubspot": {
+      "url": "https://mcp.hubspot.com",
+      "auth": "oauth",
+      "oauth": {
+        "grantType": "authorization_code",
+        "clientId": "${HUBSPOT_MCP_CLIENT_ID}",
+        "clientSecret": "${HUBSPOT_MCP_CLIENT_SECRET}",
+        "redirectUri": "http://127.0.0.1:3118/callback"
+      }
+    }
+  }
+}

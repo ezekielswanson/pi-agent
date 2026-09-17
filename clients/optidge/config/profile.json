@@ -1,0 +1,20 @@
+{
+  "name": "Optidge",
+  "slug": "optidge",
+  "hubspot": {
+    "expectedPortalId": null,
+    "notes": "Authorize the Optidge portal in /mcp-auth hubspot. Existing workstream folder is spelled Optidge."
+  },
+  "notion": {
+    "databaseIds": {},
+    "pageIds": {}
+  },
+  "asana": {
+    "workspaceGid": null,
+    "projectGids": {}
+  },
+  "external": {
+    "enabled": false,
+    "system": "unspecified"
+  }
+}

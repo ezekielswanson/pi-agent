@@ -1,0 +1,20 @@
+{
+  "name": "Apartment Life",
+  "slug": "apartment-life",
+  "hubspot": {
+    "expectedPortalId": null,
+    "notes": "Authorize the Apartment Life portal in /mcp-auth hubspot"
+  },
+  "notion": {
+    "databaseIds": {},
+    "pageIds": {}
+  },
+  "asana": {
+    "workspaceGid": null,
+    "projectGids": {}
+  },
+  "external": {
+    "enabled": false,
+    "system": "unspecified"
+  }
+}
