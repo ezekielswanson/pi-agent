@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { getRepoRoot } from "./paths.ts";
 
@@ -36,4 +36,9 @@ export function setActiveClientSlug(slug: string, repoRoot = getRepoRoot()): voi
   const piDir = join(repoRoot, ".pi");
   mkdirSync(piDir, { recursive: true });
   writeFileSync(join(piDir, ACTIVE_CLIENT_FILE), `${JSON.stringify({ slug }, null, 2)}\n`);
+}
+
+export function clearActiveClientSlug(repoRoot = getRepoRoot()): void {
+  const activePath = join(repoRoot, ".pi", ACTIVE_CLIENT_FILE);
+  if (existsSync(activePath)) rmSync(activePath);
 }

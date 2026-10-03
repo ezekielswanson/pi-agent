@@ -17,9 +17,9 @@ try {
   if (!write) {
     console.log("write skipped (pass --write to echo a stub write)");
   } else {
-    const written = await client.write({ source: "smoke-external", at: new Date().toISOString() });
-    console.log("write", written);
-    if (!written.ok) process.exitCode = 1;
+    const written = await client.write({ source: "smoke-external" });
+    console.log("write", written.ok ? "unexpected-ok" : written.errorCategory);
+    if (written.ok) process.exitCode = 1;
   }
 } catch (err) {
   console.error(err instanceof Error ? err.message : err);

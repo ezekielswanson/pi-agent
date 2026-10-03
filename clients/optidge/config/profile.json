@@ -7,11 +7,25 @@
   },
   "notion": {
     "databaseIds": {},
-    "pageIds": {}
+    "pageIds": {},
+    "testPageId": null,
+    "outputParent": null
   },
   "asana": {
+    "mode": "rest",
     "workspaceGid": null,
-    "projectGids": {}
+    "projectGids": {},
+    "testProjectGid": null
+  },
+  "researchRoots": [],
+  "allowlist": {
+    "notionPageIds": [],
+    "notionDatabaseIds": [],
+    "notionDataSourceIds": [],
+    "asanaProjectGids": [],
+    "asanaTaskGids": [],
+    "hubspotPortalIds": [],
+    "localRoots": []
   },
   "external": {
     "enabled": false,

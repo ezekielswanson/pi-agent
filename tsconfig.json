@@ -13,5 +13,5 @@
     "noEmit": true,
     "rootDir": "."
   },
-  "include": ["src/**/*.ts", "scripts/**/*.ts"]
+    "include": ["src/**/*.ts", "scripts/**/*.ts", "test/**/*.ts", ".pi/extensions/**/*.ts"]
 }

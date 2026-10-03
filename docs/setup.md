@@ -2,10 +2,10 @@
 
 ## 1. Install Pi
 
-Pi 0.85+ needs **Node 22.19 or newer**. Then install the CLI globally:
+This repo stays on Pi **0.85.1** and Node **22.23.2**. `pi --version` is a boot check. It does not prove the extensions or `pi-mcp-adapter` 2.34.0 load. Use `npm run check` for that.
 
 ```bash
-sudo npm install -g --ignore-scripts @earendil-works/pi-coding-agent
+sudo npm install -g --ignore-scripts @earendil-works/pi-coding-agent@0.85.1
 pi --version
 ```
 
@@ -62,9 +62,10 @@ npm install
 PI_CLIENT=apartment-life npm run smoke:client
 PI_CLIENT=apartment-life npm run smoke:external
 PI_CLIENT=apartment-life npm run smoke:hubspot
+npm test
 ```
 
-Notion and Asana health checks need tokens in `clients/apartment-life/.env`.
+`smoke:hubspot` is a config preflight. `npm run smoke:hubspot:live` prints `SKIPPED` without browser auth and is not a pass. Notion and Asana health checks need tokens in `clients/apartment-life/.env`. A green config check is not live Pi access.
 
 ## Client selection
 

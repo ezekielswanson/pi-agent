@@ -4,12 +4,12 @@ import { createAsanaConnector } from "./asana/index.ts";
 import { createExternalConnector } from "./external/index.ts";
 import { createNotionConnector } from "./notion/index.ts";
 
-export function createConnectorsForActiveClient(slug?: string) {
-  const loaded: LoadedClient = loadClientProfile(slug);
+export function createConnectorsForActiveClient(slug?: string, repoRoot?: string) {
+  const loaded: LoadedClient = loadClientProfile(slug, repoRoot);
   return {
     loaded,
-    notion: () => createNotionConnector(),
-    asana: () => createAsanaConnector(process.env.ASANA_ACCESS_TOKEN, loaded.profile.asana.workspaceGid),
-    external: () => createExternalConnector(loaded.profile),
+    notion: () => createNotionConnector(loaded),
+    asana: () => createAsanaConnector(loaded),
+    external: () => createExternalConnector(loaded),
   };
 }

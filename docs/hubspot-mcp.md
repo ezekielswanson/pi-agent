@@ -5,7 +5,7 @@ Runtime CRM access uses HubSpot's **remote MCP server**, not the Developer MCP s
 - Endpoint: `https://mcp.hubspot.com`
 - Transport: Streamable HTTP
 - Auth: OAuth 2.1 with PKCE
-- Pi package: `pi-mcp-adapter`
+- Pi package: `pi-mcp-adapter` **2.34.0**
 - Project config: [`.mcp.json`](../.mcp.json)
 
 Developer MCP stays optional Cursor build-time tooling. Do not use it for contacts, deals, notes, or other CRM writes from this agent.
@@ -36,7 +36,9 @@ pi
 
 Then run `/mcp-auth hubspot`. Pi opens a browser, stores tokens in the OS credential store, and retries the connection.
 
-Verify with MCP `get_user_details`, then `hubspot_check_portal` if the client profile has `expectedPortalId`.
+`npm run smoke:hubspot` only checks local config. The live check is `npm run smoke:hubspot:live`, which prints `SKIPPED` until `/mcp-auth hubspot` has been completed in Pi. Skipped is not a pass.
+
+After browser auth, call MCP `get_user_details` on that connection. The broker records the portal from that tool result. `hubspot_check_portal` does not authorize a write. Writes then need `hubspot_prepare_write` for the exact tool and payload. Logout, reconnect, and `/client` clear that verification.
 
 ## Multi-client portals
 
