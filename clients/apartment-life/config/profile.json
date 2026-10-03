@@ -2,27 +2,33 @@
   "name": "Apartment Life",
   "slug": "apartment-life",
   "hubspot": {
-    "expectedPortalId": null,
+    "expectedPortalId": 5627913,
     "notes": "Authorize the Apartment Life portal in /mcp-auth hubspot"
   },
   "notion": {
     "databaseIds": {},
     "pageIds": {},
-    "testPageId": null,
-    "outputParent": null
+    "testPageId": "3eebf244-9e83-8009-be9a-ffc30d0f09e9",
+    "outputParent": {
+      "type": "page",
+      "id": "3eebf244-9e83-80b0-860e-f1c8ce7e6b23"
+    }
   },
   "asana": {
     "mode": "rest",
-    "workspaceGid": null,
+    "workspaceGid": "4486534842270",
     "projectGids": {},
-    "testProjectGid": null
+    "testProjectGid": "1202368925633889"
   },
   "researchRoots": [],
   "allowlist": {
-    "notionPageIds": [],
+    "notionPageIds": [
+      "3eebf244-9e83-8009-be9a-ffc30d0f09e9",
+      "3eebf244-9e83-80b0-860e-f1c8ce7e6b23"
+    ],
     "notionDatabaseIds": [],
     "notionDataSourceIds": [],
-    "asanaProjectGids": [],
+    "asanaProjectGids": ["1202368925633889"],
     "asanaTaskGids": [],
     "hubspotPortalIds": [],
     "localRoots": []

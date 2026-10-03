@@ -8,7 +8,7 @@ import { loadClientProfile } from "../src/config/loadClientProfile.ts";
 import { createAsanaConnector } from "../src/connectors/asana/index.ts";
 import { createExternalConnector } from "../src/connectors/external/index.ts";
 import { createNotionConnector } from "../src/connectors/notion/index.ts";
-import { applySessionStart, ClientSession, readSessionPhase } from "../src/runtime/clientSession.ts";
+import { applySessionStart, ClientSession, getClientSession, readSessionPhase } from "../src/runtime/clientSession.ts";
 import { removeRepo, runSwitch, tempRepo, withEnv, writeClient } from "./helpers.ts";
 
 function fakeNotion() {
@@ -24,16 +24,34 @@ function fakeNotion() {
   };
 }
 
-test("real client profiles parse with explicit rest mode and no invented ids", () => {
-  for (const slug of ["apartment-life", "optidge"]) {
-    const loaded = loadClientProfile(slug);
-    assert.equal(loaded.profile.asana.mode, "rest");
-    assert.equal(loaded.profile.external.enabled, false);
-    assert.equal(loaded.profile.hubspot.expectedPortalId, null);
-    assert.equal(loaded.profile.notion.testPageId, null);
-    assert.equal(loaded.secrets.notionToken, null);
-    assert.equal(loaded.secrets.asanaToken, null);
-  }
+test("real client profiles keep optidge empty and apartment-life limited to supplied ids", () => {
+  const apartment = loadClientProfile("apartment-life");
+  assert.equal(apartment.profile.asana.mode, "rest");
+  assert.equal(apartment.profile.external.enabled, false);
+  assert.equal(apartment.profile.hubspot.expectedPortalId, 5627913);
+  assert.equal(apartment.profile.notion.testPageId, "3eebf244-9e83-8009-be9a-ffc30d0f09e9");
+  assert.deepEqual(apartment.profile.notion.outputParent, {
+    type: "page",
+    id: "3eebf244-9e83-80b0-860e-f1c8ce7e6b23",
+  });
+  assert.deepEqual(apartment.profile.allowlist.notionPageIds, [
+    "3eebf244-9e83-8009-be9a-ffc30d0f09e9",
+    "3eebf244-9e83-80b0-860e-f1c8ce7e6b23",
+  ]);
+  assert.equal(apartment.profile.asana.workspaceGid, "4486534842270");
+  assert.equal(apartment.profile.asana.testProjectGid, "1202368925633889");
+  assert.deepEqual(apartment.profile.allowlist.asanaProjectGids, ["1202368925633889"]);
+
+  const optidge = loadClientProfile("optidge");
+  assert.equal(optidge.profile.asana.mode, "rest");
+  assert.equal(optidge.profile.external.enabled, false);
+  assert.equal(optidge.profile.hubspot.expectedPortalId, null);
+  assert.equal(optidge.profile.notion.testPageId, null);
+  assert.equal(optidge.profile.notion.outputParent, null);
+  assert.equal(optidge.profile.asana.workspaceGid, null);
+  assert.equal(optidge.profile.asana.testProjectGid, null);
+  assert.equal(optidge.secrets.notionToken, null);
+  assert.equal(optidge.secrets.asanaToken, null);
 });
 
 test("client A credentials are not visible to client B, including root env", async () => {
@@ -195,4 +213,12 @@ test("startup and resume do not enable tools for a previous ready session", () =
   assert.equal(session.toolsEnabled, false);
   assert.equal(readSessionPhase(root).phase, "idle");
   removeRepo(root);
+});
+
+test("connector tools and /client share one process session", () => {
+  const session = getClientSession();
+  session.toolsEnabled = true;
+  assert.equal(getClientSession(), session);
+  assert.equal(getClientSession().toolsEnabled, true);
+  session.toolsEnabled = false;
 });

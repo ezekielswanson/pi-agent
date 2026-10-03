@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import type { ClientProfile } from "../../types/index.ts";
 import type { ClientSession } from "../../runtime/clientSession.ts";
+import { bareHubspotToolName } from "./approval.ts";
 import { extractPortalId } from "./index.ts";
 
 export interface HubspotStatusServer {
@@ -27,7 +28,7 @@ export function observeHubspotToolResult(
   event: { toolName: string; isError?: boolean; content?: unknown; details?: unknown },
 ): boolean {
   if (event.isError) return false;
-  if (!event.toolName.includes("hubspot") || !event.toolName.endsWith("get_user_details")) return false;
+  if (!isGetUserDetailsResult(event)) return false;
   if (!session.hubspotConnectionId) return false;
   const portalId = extractPortalId(event.details) ?? extractPortalId(parseContent(event.content));
   const expected = profile.hubspot.expectedPortalId;
@@ -45,6 +46,14 @@ export function observeHubspotToolResult(
     connectionId: session.hubspotConnectionId,
   };
   return true;
+}
+
+function isGetUserDetailsResult(event: { toolName: string; details?: unknown }): boolean {
+  if (event.toolName.includes("hubspot") && event.toolName.endsWith("get_user_details")) return true;
+  if (event.toolName !== "mcp") return false;
+  if (typeof event.details !== "object" || event.details === null) return false;
+  const details = event.details as { server?: unknown; tool?: unknown };
+  return details.server === "hubspot" && bareHubspotToolName(String(details.tool ?? "")) === "get_user_details";
 }
 
 function parseContent(content: unknown): unknown {

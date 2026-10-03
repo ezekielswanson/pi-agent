@@ -33,6 +33,8 @@ export function extractPortalId(userDetails: unknown): string | null {
     readNested(userDetails, ["account", "portal_id"]),
     readNested(userDetails, ["user", "portalId"]),
     readNested(userDetails, ["user", "hub_id"]),
+    readNested(userDetails, ["accountId"]),
+    readNested(userDetails, ["account_id"]),
   ];
   for (const candidate of candidates) {
     const id = asId(candidate);

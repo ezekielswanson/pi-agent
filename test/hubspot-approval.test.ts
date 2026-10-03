@@ -163,3 +163,29 @@ test("HubSpot identity comes from an MCP tool result and dies with the connectio
   assert.equal(session.verifiedPortal, null);
   assert.equal(session.hubspotConnectionId, null);
 });
+
+test("mcp get_user_details records accountId for the expected portal", () => {
+  const session = new ClientSession();
+  applyHubspotStatus(session, [{ name: "hubspot", status: "connected", listenState: "active" }]);
+  assert.equal(
+    observeHubspotToolResult(session, profile, {
+      toolName: "mcp",
+      details: { server: "hubspot", tool: "get_user_details" },
+      content: [{ type: "text", text: JSON.stringify({ accountId: 42, userId: 7 }) }],
+    }),
+    true,
+  );
+  assert.equal(session.verifiedPortal?.portalId, "42");
+
+  const other = new ClientSession();
+  applyHubspotStatus(other, [{ name: "hubspot", status: "connected", listenState: "active" }]);
+  assert.equal(
+    observeHubspotToolResult(other, profile, {
+      toolName: "mcp",
+      details: { server: "hubspot", tool: "search_crm_objects" },
+      content: [{ type: "text", text: JSON.stringify({ accountId: 42 }) }],
+    }),
+    false,
+  );
+  assert.equal(other.verifiedPortal, null);
+});

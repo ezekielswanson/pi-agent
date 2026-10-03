@@ -103,7 +103,22 @@ export class ClientSession {
   }
 }
 
-export const clientSession = new ClientSession();
+const SHARED_SESSION = Symbol.for("pi-agent.clientSession");
+
+type SessionGlobal = typeof globalThis & { [SHARED_SESSION]?: ClientSession };
+
+// Pi loads each extension with a separate jiti cache, so a module-level singleton
+// is a different object in client-profile.ts than in the connector tools.
+export function getClientSession(): ClientSession {
+  const globals = globalThis as SessionGlobal;
+  const existing = globals[SHARED_SESSION];
+  if (existing) return existing;
+  const created = new ClientSession();
+  globals[SHARED_SESSION] = created;
+  return created;
+}
+
+export const clientSession = getClientSession();
 
 export function sessionPhasePath(repoRoot: string): string {
   return join(repoRoot, ".pi", SESSION_FILE);
