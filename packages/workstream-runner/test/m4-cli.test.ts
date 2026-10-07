@@ -33,7 +33,7 @@ test("unix socket start is idempotent and detach survives the parent", { timeout
 	assert.equal(parentGone, true);
 	await waitFor(() => {
 		try {
-			return statSync(socketPath(data)).isSocket();
+			return statSync(socketPath(data)).isSocket() && statSync(join(data, "runner.pid")).isFile();
 		} catch {
 			return false;
 		}
@@ -49,10 +49,18 @@ test("unix socket start is idempotent and detach survives the parent", { timeout
 
 	const payload = { script: "hold", scope: "all", portalId: "1", approve: true };
 	const sock = socketPath(data);
-	const started = await rpc(sock, { id: "start-1", op: "start", key: "case-1", payload });
+	const cli = spawnRunner(["start", "--data", data, "--key", "case-1", "--payload", JSON.stringify(payload)]);
+	const cliExit = await waitForExit(cli, 10_000);
+	assert.equal(cliExit.code, 0, `${cliExit.stderr}\n${cliExit.stdout}`);
+	const started = JSON.parse(cliExit.stdout) as { ok: boolean; job?: { id: string } };
 	assert.equal(started.ok, true);
 	const jobId = started.job?.id;
 	assert.ok(jobId);
+	const statusCli = spawnRunner(["status", "--data", data]);
+	const statusExit = await waitForExit(statusCli, 10_000);
+	assert.equal(statusExit.code, 0, `${statusExit.stderr}\n${statusExit.stdout}`);
+	const statusBody = JSON.parse(statusExit.stdout) as { job?: { id: string } };
+	assert.equal(statusBody.job?.id, jobId);
 	const again = await rpc(sock, { id: "start-2", op: "start", key: "case-1", payload });
 	assert.equal(again.ok, true);
 	assert.equal(again.job?.id, jobId);

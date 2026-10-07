@@ -12,6 +12,8 @@ function note(detail: string): Error {
 }
 
 function isUnixSocket(target: unknown): boolean {
+	// Node 22.23 calls connect() with the already-normalized [options, callback] pair.
+	if (Array.isArray(target)) return isUnixSocket(target[0]);
 	if (typeof target === "string") return target.startsWith("/") || target.startsWith("\0");
 	if (target && typeof target === "object" && "path" in target) {
 		const path = (target as { path?: unknown }).path;

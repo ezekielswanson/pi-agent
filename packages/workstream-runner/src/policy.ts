@@ -160,7 +160,11 @@ export function decide(policy: Policy, request: AccessRequest): Decision {
 		return decideIdentities(policy, [request.from, request.to], request.portalId);
 	}
 	if (request.path.length === 0 || request.path.some((segment) => !parseIdentity(segment))) {
-		return { allow: false, reason: "unprovable", identities: collect(request.path) };
+		const identities = request.path.flatMap((segment) => {
+			const identity = parseIdentity(segment);
+			return identity ? [identity] : [];
+		});
+		return { allow: false, reason: "unprovable", identities };
 	}
 	return decideIdentities(policy, request.path, request.portalId);
 }
