@@ -1,8 +1,10 @@
+import { parseMode } from "./mode.ts";
+import { loadLiveConfig } from "./live.ts";
 import "./offline.ts";
 import { installOfflineGuard, networkAttempts } from "./offline.ts";
 import { homedir } from "node:os";
 import { join } from "node:path";
-import { rpc } from "./client.ts";
+import { rpc, subscribe } from "./client.ts";
 import { detachServe } from "./detach.ts";
 import { NODE_BIN } from "./node-bin.ts";
 import { resumeOnce, runOnce } from "./runner.ts";
@@ -10,10 +12,11 @@ import type { ScriptName } from "./script.ts";
 import { serve, socketPath } from "./server.ts";
 import { DURABLE_EXPORTS } from "./tools.ts";
 
-installOfflineGuard();
-
 const args = process.argv.slice(2);
 const command = args[0] ?? "help";
+const mode = parseMode(flag("--mode"));
+if (mode === "offline") installOfflineGuard();
+process.umask(0o077);
 
 function flag(name: string): string | undefined {
 	const index = args.indexOf(name);
@@ -21,30 +24,38 @@ function flag(name: string): string | undefined {
 }
 
 function dataDir(): string {
-	return flag("--data") ?? join(homedir(), ".workstream-runner");
+	return flag("--data") ?? join(homedir(), ".workstream-runner", mode);
 }
 
 function scriptFlag(): ScriptName {
 	const script = flag("--script");
-	if (script === "happy" || script === "crash" || script === "hold") return script;
+	if (script === "happy" || script === "crash" || script === "hold")
+		return script;
 	return "happy";
 }
 
 async function main(): Promise<void> {
 	if (command === "serve") {
-		await serve(dataDir());
+		await serve(dataDir(), {
+			mode,
+			...(mode === "live" ? { config: loadLiveConfig(flag("--config")) } : {}),
+		});
 		return;
 	}
 	if (command === "detach") {
-		const pid = detachServe(dataDir());
+		const pid = detachServe(dataDir(), mode, flag("--config"));
 		console.log(JSON.stringify({ pid, node: NODE_BIN, data: dataDir() }));
 		return;
 	}
 	if (command === "run-once") {
+		if (mode !== "offline")
+			throw new Error("Live mode requires the supervised serve interface");
 		await runOnce(dataDir(), scriptFlag());
 		return;
 	}
 	if (command === "resume-once") {
+		if (mode !== "offline")
+			throw new Error("Live mode requires the supervised serve interface");
 		await resumeOnce(dataDir());
 		return;
 	}
@@ -69,18 +80,35 @@ async function main(): Promise<void> {
 		return;
 	}
 	if (command === "list" || command === "status") {
-		console.log(JSON.stringify(await rpc(sock, { id, op: command === "status" ? "status" : "list", jobId: flag("--job") })));
+		console.log(
+			JSON.stringify(
+				await rpc(sock, {
+					id,
+					op: command === "status" ? "status" : "list",
+					jobId: flag("--job"),
+				}),
+			),
+		);
 		return;
 	}
 	if (command === "get" || command === "cancel") {
-		console.log(JSON.stringify(await rpc(sock, { id, op: command, jobId: flag("--job") })));
+		console.log(
+			JSON.stringify(
+				await rpc(sock, { id, op: command, jobId: flag("--job") }),
+			),
+		);
 		return;
 	}
 	if (command === "subscribe") {
-		console.log(JSON.stringify(await rpc(sock, { id, op: "subscribe", jobId: flag("--job") })));
+		const jobId = flag("--job");
+		if (!jobId) throw new Error("subscribe requires --job");
+		for await (const event of subscribe(sock, jobId))
+			console.log(JSON.stringify(event));
 		return;
 	}
-	console.log(`usage: ${NODE_BIN} --import tsx src/main.ts <serve|detach|health|start|list|status|get|cancel|subscribe|run-once|resume-once>`);
+	console.log(
+		`usage: ${NODE_BIN} --import tsx src/main.ts <serve|detach|health|start|list|status|get|cancel|subscribe|run-once|resume-once>`,
+	);
 }
 
 main().catch((error: unknown) => {

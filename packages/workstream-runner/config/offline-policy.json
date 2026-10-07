@@ -18,7 +18,11 @@
   "allowlist": [
     {
       "objectType": "tickets",
-      "objectId": "48489581088"
+      "objectId": "10000000001"
+    },
+    {
+      "objectType": "deals",
+      "objectId": "10000000002"
     }
   ]
 }

@@ -1,0 +1,8 @@
+{
+  "clientRoot": "/Users/zeke/Desktop/projects/client_projects/ai-agents/pi-agent",
+  "authFile": "/Users/zeke/.pi/agent/auth.json",
+  "provider": "anthropic",
+  "modelId": "claude-sonnet-4-6",
+  "maxToolCalls": 3,
+  "maxDurationMs": 90000
+}

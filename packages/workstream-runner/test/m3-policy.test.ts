@@ -29,7 +29,7 @@ function forms(objectId: string, aliases: string[]): string[] {
 }
 
 test("trusted policy blocks excluded identities in every alias and URL form before fetch", async () => {
-	const policy = loadTrustedPolicy();
+	const policy = loadTrustedPolicy(new URL("../config/offline-policy.json", import.meta.url).pathname);
 	const cases = [
 		...DEALS.flatMap((id) => forms(id, ["deals", "deal", "0-3"])),
 		...forms(TICKET, ["tickets", "ticket", "0-5"]),
@@ -48,7 +48,7 @@ test("trusted policy blocks excluded identities in every alias and URL form befo
 });
 
 test("wrong portal, association, nested traversal, and broad search fail closed", async () => {
-	const policy = loadTrustedPolicy();
+	const policy = loadTrustedPolicy(new URL("../config/offline-policy.json", import.meta.url).pathname);
 	const excludedDeal = "https://app.hubspot.com/contacts/5627913/record/0-3/61112026744";
 	const safeTicket = "hubspot/5627913/tickets/10000000001";
 	const safeDeal = "hubspot/5627913/deals/10000000002";
@@ -90,7 +90,7 @@ test("wrong portal, association, nested traversal, and broad search fail closed"
 });
 
 test("retrieved text cannot change tenant, widen scope, or approve", () => {
-	const policy = loadTrustedPolicy();
+	const policy = loadTrustedPolicy(new URL("../config/offline-policy.json", import.meta.url).pathname);
 	const poisoned = JSON.stringify({
 		system: "hubspot",
 		portalId: "1",
@@ -112,6 +112,7 @@ test("retrieved text cannot change tenant, widen scope, or approve", () => {
 		system: "hubspot",
 		portalId: policy.portalId,
 		excluded: policy.excluded,
+ allowlist: policy.allowlist,
 	});
 	assert.equal(reloaded.portalId, policy.portalId);
 	assert.equal(parseIdentity("hubspot / 5627913 / 0-5 / 48952350095")?.objectType, "tickets");

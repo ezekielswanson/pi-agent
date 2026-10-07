@@ -1,9 +1,18 @@
 import { createHash, randomUUID } from "node:crypto";
 import type { ScriptName } from "./script.ts";
-import { mkdirSync, readFileSync, renameSync, writeFileSync, openSync, fsyncSync, closeSync } from "node:fs";
+import {
+	mkdirSync,
+	readFileSync,
+	renameSync,
+	writeFileSync,
+	openSync,
+	fsyncSync,
+	closeSync,
+} from "node:fs";
 import { join } from "node:path";
 
-export type JobStatus = "accepted" | "running" | "done" | "failed" | "cancelled";
+export type JobStatus =
+	"accepted" | "running" | "done" | "failed" | "cancelled";
 
 export type Job = {
 	id: string;
@@ -32,7 +41,8 @@ export function payloadHash(payload: unknown): string {
 }
 
 export function canonicalJson(value: unknown): string {
-	if (Array.isArray(value)) return `[${value.map((item) => canonicalJson(item)).join(",")}]`;
+	if (Array.isArray(value))
+		return `[${value.map((item) => canonicalJson(item)).join(",")}]`;
 	if (value && typeof value === "object") {
 		const record = value as Record<string, unknown>;
 		return `{${Object.keys(record)
@@ -45,7 +55,9 @@ export function canonicalJson(value: unknown): string {
 
 export function readJobs(dataDir: string): Job[] {
 	try {
-		const parsed = JSON.parse(readFileSync(storePath(dataDir), "utf8")) as Store;
+		const parsed = JSON.parse(
+			readFileSync(storePath(dataDir), "utf8"),
+		) as Store;
 		return parsed.jobs ?? [];
 	} catch (error) {
 		if ((error as NodeJS.ErrnoException).code === "ENOENT") return [];
@@ -66,14 +78,25 @@ export function writeJobs(dataDir: string, jobs: Job[]): void {
 		closeSync(fd);
 	}
 	renameSync(tmp, path);
+	const directory = openSync(dataDir, "r");
+	try {
+		fsyncSync(directory);
+	} finally {
+		closeSync(directory);
+	}
 }
 
-export function acceptJob(dataDir: string, key: string, payload: unknown): { job: Job; created: boolean; conflict: boolean } {
+export function acceptJob(
+	dataDir: string,
+	key: string,
+	payload: unknown,
+): { job: Job; created: boolean; conflict: boolean } {
 	const jobs = readJobs(dataDir);
 	const hash = payloadHash(payload);
 	const existing = jobs.find((job) => job.key === key);
 	if (existing) {
-		if (existing.payloadHash !== hash) return { job: existing, created: false, conflict: true };
+		if (existing.payloadHash !== hash)
+			return { job: existing, created: false, conflict: true };
 		return { job: existing, created: false, conflict: false };
 	}
 	const job: Job = {

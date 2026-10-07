@@ -1,10 +1,22 @@
 import net from "node:net";
+import { acquireWriter } from "./lock.ts";
 import { chmodSync, mkdirSync, unlinkSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import type { ConversationId, Harness, SubmissionId } from "@earendil-works/pi-durable";
+import type {
+	ConversationId,
+	Harness,
+	SubmissionId,
+} from "@earendil-works/pi-durable";
 import { acceptJob, readJobs, saveJob, type Job } from "./jobs.ts";
 import { type ScriptName } from "./script.ts";
-import { closeSession, harnessContext, openSession, startConversation, type OpenedSession } from "./session.ts";
+import {
+	closeSession,
+	harnessContext,
+	openSession,
+	startConversation,
+	type OpenedSession,
+	crashBoundary,
+} from "./session.ts";
 
 export type ClientRequest = {
 	id: string;
@@ -18,118 +30,219 @@ type ServerState = {
 	dataDir: string;
 	opened: OpenedSession;
 	inflight: Set<string>;
+	queue: Promise<void>;
 };
 
 export function socketPath(dataDir: string): string {
 	return join(dataDir, "runner.sock");
 }
 
-export async function serve(dataDir: string): Promise<void> {
+export async function serve(
+	dataDir: string,
+	options: Parameters<typeof openSession>[1] = {},
+): Promise<void> {
 	process.on("SIGHUP", () => {});
 	mkdirSync(dataDir, { recursive: true, mode: 0o700 });
 	chmodSync(dataDir, 0o700);
-	const opened = await openSession(dataDir);
-	opened.harness.resume();
-	const state: ServerState = { dataDir, opened, inflight: new Set() };
-	await recover(state);
-
-	const server = net.createServer((socket) => {
-		let buffer = "";
-		socket.on("data", (chunk) => {
-			buffer += chunk.toString("utf8");
-			let newline = buffer.indexOf("\n");
-			while (newline >= 0) {
-				const line = buffer.slice(0, newline);
-				buffer = buffer.slice(newline + 1);
-				void handleLine(state, socket, line);
-				newline = buffer.indexOf("\n");
-			}
-		});
-	});
-
-	const sock = socketPath(dataDir);
+	process.umask(0o077);
+	const releaseWriter = acquireWriter(dataDir);
 	try {
-		unlinkSync(sock);
-	} catch (error) {
-		if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
-	}
-	await new Promise<void>((resolve, reject) => {
-		server.once("error", reject);
-		server.listen(sock, () => resolve());
-	});
-	chmodSync(sock, 0o600);
-	writeFileSync(join(dataDir, "runner.pid"), `${process.pid}\n`, { mode: 0o600 });
-	writeFileSync(
-		join(dataDir, "runner.json"),
-		JSON.stringify({ pid: process.pid, socket: sock, node: process.execPath, startedAt: new Date().toISOString() }, null, 2),
-		{ mode: 0o600 },
-	);
-
-	await new Promise<void>((resolve) => {
-		const shutdown = () => {
-			server.close();
-			void closeSession(opened).finally(() => resolve());
+		const opened = await openSession(dataDir, options);
+		opened.harness.resume();
+		const state: ServerState = {
+			dataDir,
+			opened,
+			inflight: new Set(),
+			queue: Promise.resolve(),
 		};
-		process.once("SIGTERM", shutdown);
-		process.once("SIGINT", shutdown);
-	});
+		await recover(state);
+
+		const server = net.createServer((socket) => {
+			let buffer = "";
+			socket.on("error", () => socket.destroy());
+			socket.on("data", (chunk) => {
+				buffer += chunk.toString("utf8");
+				let newline = buffer.indexOf("\n");
+				while (newline >= 0) {
+					const line = buffer.slice(0, newline);
+					buffer = buffer.slice(newline + 1);
+					state.queue = state.queue
+						.then(() => handleLine(state, socket, line))
+						.catch(() => {
+							socket.destroy();
+						});
+					newline = buffer.indexOf("\n");
+				}
+			});
+		});
+
+		const sock = socketPath(dataDir);
+		try {
+			unlinkSync(sock);
+		} catch (error) {
+			if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+		}
+		await new Promise<void>((resolve, reject) => {
+			server.once("error", reject);
+			server.listen(sock, () => resolve());
+		});
+		chmodSync(sock, 0o600);
+		writeFileSync(join(dataDir, "runner.pid"), `${process.pid}\n`, {
+			mode: 0o600,
+		});
+		writeFileSync(
+			join(dataDir, "runner.json"),
+			JSON.stringify(
+				{
+					pid: process.pid,
+					socket: sock,
+					node: process.execPath,
+					mode: opened.mode,
+					model: opened.model,
+					target: "hubspot/5627913/tickets/48489581088",
+					connectionId: opened.live?.connectionId ?? null,
+					capability: opened.live?.capability ?? "offline",
+					maxDurationMs: opened.maxDurationMs ?? null,
+					startedAt: new Date().toISOString(),
+				},
+				null,
+				2,
+			),
+			{ mode: 0o600 },
+		);
+
+		await new Promise<void>((resolve) => {
+			const shutdown = () => {
+				server.close();
+				void closeSession(opened).finally(() => resolve());
+			};
+			process.once("SIGTERM", shutdown);
+			process.once("SIGINT", shutdown);
+		});
+	} finally {
+		releaseWriter();
+	}
 }
 
 async function recover(state: ServerState): Promise<void> {
 	for (const job of readJobs(state.dataDir)) {
-		if (job.submissionId && (job.status === "running" || job.status === "accepted")) {
+		if (
+			job.submissionId &&
+			(job.status === "running" || job.status === "accepted")
+		) {
 			watch(state, job);
 			continue;
 		}
-		if (job.status === "accepted" && job.dispatchCount === 0) await dispatch(state, job);
+		if (job.status === "accepted" && job.dispatchCount === 0)
+			await dispatch(state, job);
 	}
 }
 
-async function handleLine(state: ServerState, socket: net.Socket, line: string): Promise<void> {
+async function handleLine(
+	state: ServerState,
+	socket: net.Socket,
+	line: string,
+): Promise<void> {
 	let request: ClientRequest;
 	try {
 		request = JSON.parse(line) as ClientRequest;
 	} catch {
-		write(socket, { id: "?", ok: false, error: { code: "bad_json", message: "expected one JSON object" } });
+		write(socket, {
+			id: "?",
+			ok: false,
+			error: { code: "bad_json", message: "expected one JSON object" },
+		});
 		return;
 	}
 	try {
 		if (request.op === "health") {
-			write(socket, { id: request.id, ok: true, result: { pid: process.pid, status: "ok", durable: "1.0.4" } });
+			write(socket, {
+				id: request.id,
+				ok: true,
+				result: {
+					pid: process.pid,
+					status: "ok",
+					durable: "1.0.4",
+					mode: openedMode(state),
+					target: "hubspot/5627913/tickets/48489581088",
+					model: state.opened.model,
+					connectionId: state.opened.live?.connectionId ?? null,
+					capability: state.opened.live?.capability ?? "offline",
+				},
+			});
 			return;
 		}
 		if (request.op === "start") {
 			if (!request.key) throw coded("bad_request", "start requires a key");
-			const accepted = acceptJob(state.dataDir, request.key, request.payload ?? null);
+			if (state.opened.mode === "live") {
+				const payload = request.payload as Record<string, unknown> | undefined;
+				if (
+					!payload ||
+					Object.keys(payload).some(
+						(key) => !["target", "kind"].includes(key),
+					) ||
+					(payload.kind !== undefined && payload.kind !== "browser") ||
+					(state.opened.live?.capability === "browser" ?
+						payload.kind !== "browser" : payload.kind !== undefined) ||
+					payload.target !== "hubspot/5627913/tickets/48489581088"
+				)
+					throw coded(
+						"out_of_scope",
+						"Live start requires only the exact pilot target",
+					);
+			}
+			const accepted = acceptJob(
+				state.dataDir,
+				request.key,
+				request.payload ?? null,
+			);
+			crashBoundary("acceptance");
 			if (accepted.conflict) {
 				write(socket, {
 					id: request.id,
 					ok: false,
-					error: { code: "conflict", message: `key ${request.key} is already bound to a different payload` },
+					error: {
+						code: "conflict",
+						message: `key ${request.key} is already bound to a different payload`,
+					},
 					job: accepted.job,
 				});
 				return;
 			}
-			const job = accepted.job.dispatchCount === 0 && accepted.job.status === "accepted"
-				? await dispatch(state, accepted.job)
-				: accepted.job;
+			const job =
+				accepted.job.dispatchCount === 0 && accepted.job.status === "accepted"
+					? await dispatch(state, accepted.job)
+					: accepted.job;
 			write(socket, { id: request.id, ok: true, job });
 			return;
 		}
 		if (request.op === "list") {
-			write(socket, { id: request.id, ok: true, jobs: readJobs(state.dataDir) });
+			write(socket, {
+				id: request.id,
+				ok: true,
+				jobs: readJobs(state.dataDir),
+			});
 			return;
 		}
 		if (request.op === "get" || request.op === "status") {
 			const job = findJob(state, request.jobId);
-			write(socket, { id: request.id, ok: true, job, jobs: readJobs(state.dataDir) });
+			write(socket, {
+				id: request.id,
+				ok: true,
+				job,
+				jobs: readJobs(state.dataDir),
+			});
 			return;
 		}
 		if (request.op === "cancel") {
 			const job = findJob(state, request.jobId);
 			if (!job) throw coded("not_found", "unknown job");
 			await cancel(state, job);
-			write(socket, { id: request.id, ok: true, job: readJobs(state.dataDir).find((item) => item.id === job.id) });
+			write(socket, {
+				id: request.id,
+				ok: true,
+				job: readJobs(state.dataDir).find((item) => item.id === job.id),
+			});
 			return;
 		}
 		if (request.op === "subscribe") {
@@ -138,25 +251,42 @@ async function handleLine(state: ServerState, socket: net.Socket, line: string):
 			subscribe(state, socket, request.id, job.id);
 			return;
 		}
-		write(socket, { id: request.id, ok: false, error: { code: "unsupported", message: `unsupported op ${request.op}` } });
+		write(socket, {
+			id: request.id,
+			ok: false,
+			error: { code: "unsupported", message: `unsupported op ${request.op}` },
+		});
 	} catch (error) {
 		const codedError = error as { code?: string; message?: string };
 		write(socket, {
 			id: request.id,
 			ok: false,
-			error: { code: codedError.code ?? "error", message: codedError.message ?? String(error) },
+			error: {
+				code: codedError.code ?? "error",
+				message: codedError.message ?? String(error),
+			},
 		});
 	}
 }
 
-function subscribe(state: ServerState, socket: net.Socket, id: string, jobId: string): void {
+function subscribe(
+	state: ServerState,
+	socket: net.Socket,
+	id: string,
+	jobId: string,
+): void {
 	const send = () => readJobs(state.dataDir).find((job) => job.id === jobId);
 	const first = send();
 	write(socket, { id, ok: true, event: "snapshot", job: first });
 	const timer = setInterval(() => {
 		const job = send();
 		write(socket, { id, ok: true, event: "update", job });
-		if (!job || job.status === "done" || job.status === "failed" || job.status === "cancelled") {
+		if (
+			!job ||
+			job.status === "done" ||
+			job.status === "failed" ||
+			job.status === "cancelled"
+		) {
 			write(socket, { id, ok: true, event: "end", job });
 			clearInterval(timer);
 			socket.end();
@@ -166,11 +296,19 @@ function subscribe(state: ServerState, socket: net.Socket, id: string, jobId: st
 }
 
 async function dispatch(state: ServerState, job: Job): Promise<Job> {
-	if (state.inflight.has(job.id) || job.dispatchCount > 0 || job.submissionId) return job;
+	if (state.inflight.has(job.id) || job.dispatchCount > 0 || job.submissionId)
+		return job;
 	state.inflight.add(job.id);
 	try {
 		const script = scriptFromPayload(job.payload);
-		const started = await startConversation(state.opened, job.id, script);
+		const started = await startConversation(
+			state.opened,
+			job.id,
+			script,
+			(job.payload as { kind?: string })?.kind === "browser"
+				? "browser"
+				: "investigation",
+		);
 		const dispatched: Job = {
 			...job,
 			status: "running",
@@ -181,6 +319,7 @@ async function dispatch(state: ServerState, job: Job): Promise<Job> {
 			dispatchedAt: new Date().toISOString(),
 		};
 		saveJob(state.dataDir, dispatched);
+		crashBoundary("projection");
 		watch(state, dispatched);
 		return dispatched;
 	} finally {
@@ -190,43 +329,75 @@ async function dispatch(state: ServerState, job: Job): Promise<Job> {
 
 function watch(state: ServerState, job: Job): void {
 	if (!job.submissionId) return;
-	void state.opened.harness.submission(job.submissionId as SubmissionId, harnessContext).then(async (submission) => {
-		if (!submission) return;
-		const settled = await submission.wait(harnessContext);
-		const current = readJobs(state.dataDir).find((item) => item.id === job.id) ?? job;
-		if (current.status === "cancelled") return;
-		saveJob(state.dataDir, {
-			...current,
-			status: settled.status === "done" ? "done" : "failed",
-			finishedAt: new Date().toISOString(),
-			...(settled.status === "unanswered" ? { error: settled.reason } : {}),
+	const timer =
+		state.opened.mode === "live"
+			? setTimeout(
+					() => {
+						void cancel(state, job);
+					},
+					Math.max(
+						0,
+						Date.parse(job.createdAt) +
+							state.opened.maxDurationMs! -
+							Date.now(),
+					),
+				)
+			: undefined;
+	void state.opened.harness
+		.submission(job.submissionId as SubmissionId, harnessContext)
+		.then(async (submission) => {
+			if (!submission) return;
+			const settled = await submission.wait(harnessContext);
+			const current =
+				readJobs(state.dataDir).find((item) => item.id === job.id) ?? job;
+			if (current.status === "cancelled") return;
+			saveJob(state.dataDir, {
+				...current,
+				status: settled.status === "done" ? "done" : "failed",
+				finishedAt: new Date().toISOString(),
+				...(settled.status === "unanswered" ? { error: settled.reason } : {}),
+			});
+		})
+		.finally(() => {
+			if (timer) clearTimeout(timer);
 		});
-	});
 }
 
 async function cancel(state: ServerState, job: Job): Promise<void> {
 	if (job.conversationId) {
-		const conversation = await state.opened.harness.conversation(job.conversationId as ConversationId, harnessContext);
+		const conversation = await state.opened.harness.conversation(
+			job.conversationId as ConversationId,
+			harnessContext,
+		);
 		if (conversation) await conversation.abort(harnessContext);
 	}
-	saveJob(state.dataDir, { ...job, status: "cancelled", finishedAt: new Date().toISOString() });
+	saveJob(state.dataDir, {
+		...job,
+		status: "cancelled",
+		finishedAt: new Date().toISOString(),
+	});
 }
 
 function scriptFromPayload(payload: unknown): ScriptName {
 	if (!payload || typeof payload !== "object") return "happy";
 	const script = (payload as { script?: unknown }).script;
-	if (script === "happy" || script === "crash" || script === "hold") return script;
+	if (script === "happy" || script === "crash" || script === "hold")
+		return script;
 	return "happy";
 }
 
-function findJob(state: ServerState, jobId: string | undefined): Job | undefined {
+function findJob(
+	state: ServerState,
+	jobId: string | undefined,
+): Job | undefined {
 	const jobs = readJobs(state.dataDir);
 	if (!jobId) return jobs.at(-1);
 	return jobs.find((job) => job.id === jobId);
 }
 
 function write(socket: net.Socket, message: unknown): void {
-	socket.write(`${JSON.stringify(message)}\n`);
+	if (!socket.destroyed && socket.writable)
+		socket.write(`${JSON.stringify(message)}\n`);
 }
 
 function coded(code: string, message: string): Error {
@@ -236,3 +407,7 @@ function coded(code: string, message: string): Error {
 }
 
 export type { Harness };
+
+function openedMode(state: ServerState) {
+	return state.opened.mode;
+}

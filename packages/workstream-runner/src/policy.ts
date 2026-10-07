@@ -14,10 +14,12 @@ export type Identity = {
 export type Policy = {
 	system: "hubspot";
 	portalId: string;
+	allowlist: readonly { objectType: ObjectType; objectId: string }[];
 	excluded: readonly { objectType: ObjectType; objectId: string }[];
 };
 
-export type DecisionReason = "wrong_portal" | "excluded" | "unprovable";
+export type DecisionReason =
+	"wrong_portal" | "excluded" | "unprovable" | "out_of_scope";
 
 export type Decision =
 	| { allow: true; identities: Identity[] }
@@ -55,7 +57,8 @@ type TraverseRequest = {
 	declaredScope?: unknown;
 };
 
-export type AccessRequest = FetchRequest | SearchRequest | AssociateRequest | TraverseRequest;
+export type AccessRequest =
+	FetchRequest | SearchRequest | AssociateRequest | TraverseRequest;
 
 const TYPE_ALIASES: Record<string, ObjectType> = {
 	"0-3": "deals",
@@ -90,27 +93,53 @@ export function parseTrustedPolicy(raw: unknown): Policy {
 		throw new Error("trusted policy must be an object");
 	}
 	const record = raw as Record<string, unknown>;
-	const allowed = new Set(["system", "portalId", "excluded"]);
+	const allowed = new Set(["system", "portalId", "excluded", "allowlist"]);
 	for (const key of Object.keys(record)) {
-		if (!allowed.has(key)) throw new Error(`trusted policy rejects field "${key}"`);
+		if (!allowed.has(key))
+			throw new Error(`trusted policy rejects field "${key}"`);
 	}
-	if (record.system !== "hubspot") throw new Error("trusted policy system must be hubspot");
+	if (record.system !== "hubspot")
+		throw new Error("trusted policy system must be hubspot");
 	if (typeof record.portalId !== "string" || !/^\d+$/.test(record.portalId)) {
 		throw new Error("trusted policy portalId must be digits");
 	}
-	if (!Array.isArray(record.excluded)) throw new Error("trusted policy excluded must be a list");
+	if (!Array.isArray(record.excluded))
+		throw new Error("trusted policy excluded must be a list");
 	const excluded = record.excluded.map((item) => {
 		if (!item || typeof item !== "object" || Array.isArray(item)) {
 			throw new Error("excluded entry must be an object");
 		}
 		const entry = item as Record<string, unknown>;
-		const objectType = normalizeObjectType(typeof entry.objectType === "string" ? entry.objectType : "");
-		if (!objectType || typeof entry.objectId !== "string" || !/^\d+$/.test(entry.objectId)) {
-			throw new Error("excluded entry needs a known object type and numeric id");
+		const objectType = normalizeObjectType(
+			typeof entry.objectType === "string" ? entry.objectType : "",
+		);
+		if (
+			!objectType ||
+			typeof entry.objectId !== "string" ||
+			!/^\d+$/.test(entry.objectId)
+		) {
+			throw new Error(
+				"excluded entry needs a known object type and numeric id",
+			);
 		}
 		return { objectType, objectId: entry.objectId };
 	});
-	return { system: "hubspot", portalId: record.portalId, excluded };
+	if (!Array.isArray(record.allowlist) || !record.allowlist.length)
+		throw new Error("trusted policy requires an exact allowlist");
+	const allowlist = record.allowlist.map((item) => {
+		const entry = item as Record<string, unknown>;
+		const objectType = normalizeObjectType(
+			typeof entry?.objectType === "string" ? entry.objectType : "",
+		);
+		if (
+			!objectType ||
+			typeof entry.objectId !== "string" ||
+			!/^\d+$/.test(entry.objectId)
+		)
+			throw new Error("invalid allowlist entry");
+		return { objectType, objectId: entry.objectId };
+	});
+	return { system: "hubspot", portalId: record.portalId, excluded, allowlist };
 }
 
 export function normalizeObjectType(raw: string): ObjectType | undefined {
@@ -125,7 +154,11 @@ export function isExcluded(policy: Policy, identity: Identity): boolean {
 	return (
 		identity.system === policy.system &&
 		identity.portalId === policy.portalId &&
-		policy.excluded.some((item) => item.objectType === identity.objectType && item.objectId === identity.objectId)
+		policy.excluded.some(
+			(item) =>
+				item.objectType === identity.objectType &&
+				item.objectId === identity.objectId,
+		)
 	);
 }
 
@@ -156,10 +189,22 @@ export function decide(policy: Policy, request: AccessRequest): Decision {
 	if (request.op === "associate") {
 		const from = decideIdentities(policy, [request.from], request.portalId);
 		if (!from.allow) return from;
-		if (request.to === undefined) return { allow: false, reason: "unprovable", identities: from.identities };
-		return decideIdentities(policy, [request.from, request.to], request.portalId);
+		if (request.to === undefined)
+			return {
+				allow: false,
+				reason: "unprovable",
+				identities: from.identities,
+			};
+		return decideIdentities(
+			policy,
+			[request.from, request.to],
+			request.portalId,
+		);
 	}
-	if (request.path.length === 0 || request.path.some((segment) => !parseIdentity(segment))) {
+	if (
+		request.path.length === 0 ||
+		request.path.some((segment) => !parseIdentity(segment))
+	) {
 		const identities = request.path.flatMap((segment) => {
 			const identity = parseIdentity(segment);
 			return identity ? [identity] : [];
@@ -171,19 +216,32 @@ export function decide(policy: Policy, request: AccessRequest): Decision {
 
 function decideSearch(policy: Policy, request: SearchRequest): Decision {
 	const objectType = normalizeObjectType(request.objectType);
-	if (!objectType || request.query !== undefined || !request.objectIds || request.objectIds.length === 0) {
+	if (
+		!objectType ||
+		request.query !== undefined ||
+		!request.objectIds ||
+		request.objectIds.length === 0
+	) {
 		return { allow: false, reason: "unprovable", identities: [] };
 	}
 	const identities: Identity[] = [];
 	for (const objectId of request.objectIds) {
-		const parsed = parseIdentity(objectId) ?? identityFromParts(["hubspot", request.portalId, objectType, objectId]);
+		const parsed: Identity | undefined =
+			parseIdentity(objectId) ??
+			identityFromParts(["hubspot", request.portalId, objectType, objectId]);
 		if (!parsed) return { allow: false, reason: "unprovable", identities };
+		if (parsed.objectType !== objectType)
+			return { allow: false, reason: "unprovable", identities };
 		identities.push(parsed);
 	}
 	return decideParsed(policy, identities, request.portalId);
 }
 
-function decideIdentities(policy: Policy, targets: readonly string[], portalId?: string): Decision {
+function decideIdentities(
+	policy: Policy,
+	targets: readonly string[],
+	portalId?: string,
+): Decision {
 	const identities: Identity[] = [];
 	for (const target of targets) {
 		const parsed = parseIdentity(target);
@@ -193,13 +251,29 @@ function decideIdentities(policy: Policy, targets: readonly string[], portalId?:
 	return decideParsed(policy, identities, portalId);
 }
 
-function decideParsed(policy: Policy, identities: Identity[], expectedPortal?: string): Decision {
+function decideParsed(
+	policy: Policy,
+	identities: Identity[],
+	expectedPortal?: string,
+): Decision {
 	if (expectedPortal !== undefined && expectedPortal !== policy.portalId) {
 		return { allow: false, reason: "wrong_portal", identities };
 	}
 	for (const identity of identities) {
-		if (identity.portalId !== policy.portalId) return { allow: false, reason: "wrong_portal", identities };
-		if (isExcluded(policy, identity)) return { allow: false, reason: "excluded", identities };
+		if (identity.portalId !== policy.portalId)
+			return { allow: false, reason: "wrong_portal", identities };
+		if (isExcluded(policy, identity))
+			return { allow: false, reason: "excluded", identities };
+	}
+	for (const identity of identities) {
+		if (
+			!policy.allowlist.some(
+				(item) =>
+					item.objectType === identity.objectType &&
+					item.objectId === identity.objectId,
+			)
+		)
+			return { allow: false, reason: "out_of_scope", identities };
 	}
 	return { allow: true, identities };
 }
@@ -207,8 +281,58 @@ function decideParsed(policy: Policy, identities: Identity[], expectedPortal?: s
 function identityFromUrl(url: URL): Identity | undefined {
 	if (url.protocol === "hubspot:") {
 		const portalId = url.hostname;
-		const [objectType, objectId] = url.pathname.split("/").filter(Boolean);
+		if (url.search || url.hash || url.username || url.password || url.port)
+			return undefined;
+		const parts = url.pathname.split("/").filter(Boolean);
+		if (parts.length !== 2) return undefined;
+		const [objectType, objectId] = parts;
 		return buildIdentity(portalId, objectType ?? "", objectId ?? "");
+	}
+	if (
+		url.protocol !== "https:" ||
+		url.hostname !== "app.hubspot.com" ||
+		url.port ||
+		url.username ||
+		url.password ||
+		url.hash
+	)
+		return undefined;
+	if (url.search) {
+		if (
+			![...url.searchParams.keys()].every((key) =>
+				[
+					"objectType",
+					"objectId",
+					"objectTypeId",
+					"id",
+					"portalId",
+					"portal",
+				].includes(key),
+			)
+		)
+			return undefined;
+		if (
+			[...url.searchParams.keys()].some(
+				(key) => url.searchParams.getAll(key).length !== 1,
+			)
+		)
+			return undefined;
+		if (!/^\/contacts\/\d+\/objects$/.test(url.pathname)) return undefined;
+		const pathPortal = url.pathname.split("/")[2];
+		if (
+			["portalId", "portal"].some(
+				(key) =>
+					url.searchParams.has(key) && url.searchParams.get(key) !== pathPortal,
+			)
+		)
+			return undefined;
+		if (
+			url.searchParams.has("objectType") &&
+			url.searchParams.has("objectTypeId")
+		)
+			return undefined;
+		if (url.searchParams.has("objectId") && url.searchParams.has("id"))
+			return undefined;
 	}
 	const fromQuery = identityFromQuery(url);
 	if (fromQuery) return fromQuery;
@@ -216,8 +340,10 @@ function identityFromUrl(url: URL): Identity | undefined {
 	const fromPath = identityFromParts(parts);
 	if (fromPath) return fromPath;
 	const portalId = portalFromPath(parts);
-	const objectType = url.searchParams.get("objectType") ?? url.searchParams.get("objectTypeId");
-	const objectId = url.searchParams.get("objectId") ?? url.searchParams.get("id");
+	const objectType =
+		url.searchParams.get("objectType") ?? url.searchParams.get("objectTypeId");
+	const objectId =
+		url.searchParams.get("objectId") ?? url.searchParams.get("id");
 	if (!portalId || !objectType || !objectId) return undefined;
 	return buildIdentity(portalId, objectType, objectId);
 }
@@ -229,9 +355,12 @@ function portalFromPath(parts: string[]): string | undefined {
 }
 
 function identityFromQuery(url: URL): Identity | undefined {
-	const portalId = url.searchParams.get("portalId") ?? url.searchParams.get("portal");
-	const objectType = url.searchParams.get("objectType") ?? url.searchParams.get("objectTypeId");
-	const objectId = url.searchParams.get("objectId") ?? url.searchParams.get("id");
+	const portalId =
+		url.searchParams.get("portalId") ?? url.searchParams.get("portal");
+	const objectType =
+		url.searchParams.get("objectType") ?? url.searchParams.get("objectTypeId");
+	const objectId =
+		url.searchParams.get("objectId") ?? url.searchParams.get("id");
 	if (!portalId || !objectType || !objectId) return undefined;
 	return buildIdentity(portalId, objectType, objectId);
 }
@@ -239,15 +368,24 @@ function identityFromQuery(url: URL): Identity | undefined {
 function identityFromParts(parts: string[]): Identity | undefined {
 	const hubspot = parts[0] === "hubspot" ? parts.slice(1) : parts;
 	const contacts = hubspot[0] === "contacts" ? hubspot.slice(1) : hubspot;
-	const record = contacts[1] === "record" ? [contacts[0], contacts[2], contacts[3]] : contacts;
-	if (!record || record.length < 3) return undefined;
+	if (contacts[1] === "record" && contacts.length !== 4) return undefined;
+	const record =
+		contacts[1] === "record"
+			? [contacts[0], contacts[2], contacts[3]]
+			: contacts;
+	if (!record || record.length !== 3) return undefined;
 	const [portalId, objectType, objectId] = record;
 	if (!portalId || !objectType || !objectId) return undefined;
 	return buildIdentity(portalId, objectType, objectId);
 }
 
-function buildIdentity(portalId: string, objectTypeRaw: string, objectId: string): Identity | undefined {
+function buildIdentity(
+	portalId: string,
+	objectTypeRaw: string,
+	objectId: string,
+): Identity | undefined {
 	const objectType = normalizeObjectType(objectTypeRaw);
-	if (!objectType || !/^\d+$/.test(portalId) || !/^\d+$/.test(objectId)) return undefined;
+	if (!objectType || !/^\d+$/.test(portalId) || !/^\d+$/.test(objectId))
+		return undefined;
 	return { system: "hubspot", portalId, objectType, objectId };
 }

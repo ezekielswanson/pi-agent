@@ -3,12 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "type": "module",
-  "description": "Headless Pi Durable investigation runner. Scripted provider only; not production-ready.",
+  "description": "Scoped Pi Durable pilot with separate offline and live modes; not production-ready.",
   "engines": {
     "node": ">=22.19.0"
   },
   "bin": {
-    "workstream-runner": "./src/cli.ts"
+    "workstream-runner": "./src/cli.mjs"
   },
   "scripts": {
     "test": "/Users/zeke/.nvm/versions/node/v22.23.2/bin/node --import tsx --test test/*.test.ts",
@@ -16,7 +16,8 @@
     "typecheck": "/Users/zeke/.nvm/versions/node/v22.23.2/bin/node node_modules/typescript/bin/tsc --noEmit"
   },
   "dependencies": {
-    "@earendil-works/pi-durable": "1.0.4"
+    "@earendil-works/pi-durable": "1.0.4",
+    "playwright-core": "1.63.0"
   },
   "devDependencies": {
     "@types/node": "^24.5.2",

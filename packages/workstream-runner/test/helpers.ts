@@ -11,7 +11,7 @@ export function tempDir(): string {
 	return mkdtempSync(join("/tmp", "wsr-"));
 }
 
-export function spawnRunner(args: string[]): ChildProcess {
+export function spawnRunner(args: string[], extraEnv: {WSR_TEST_CRASH?: string} = {}): ChildProcess {
 	return spawn(NODE_BIN, ["--import", "tsx", join(packageRoot, "src", "main.ts"), ...args], {
 		cwd: packageRoot,
 		stdio: ["ignore", "pipe", "pipe"],
@@ -20,6 +20,7 @@ export function spawnRunner(args: string[]): ChildProcess {
 			TMPDIR: "/tmp",
 			PATH: `${dirname(NODE_BIN)}:/usr/bin:/bin`,
 			LANG: process.env.LANG,
+ ...extraEnv,
 		},
 	});
 }
