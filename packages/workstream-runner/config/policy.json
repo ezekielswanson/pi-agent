@@ -1,0 +1,9 @@
+{
+  "system": "hubspot",
+  "portalId": "5627913",
+  "excluded": [
+    { "objectType": "deals", "objectId": "61112026744" },
+    { "objectType": "deals", "objectId": "65056178321" },
+    { "objectType": "tickets", "objectId": "48952350095" }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "node": "/Users/zeke/.nvm/versions/node/v22.23.2/bin/node",
+  "import": "tsx",
+  "entry": "src/main.ts",
+  "serveArgs": ["serve"],
+  "note": "Launch only with this absolute node binary. A detached serve ignores SIGHUP and starts a new session."
+}

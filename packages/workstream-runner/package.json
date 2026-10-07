@@ -1,0 +1,26 @@
+{
+  "name": "workstream-runner",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Headless Pi Durable investigation runner. Scripted provider only; not production-ready.",
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "bin": {
+    "workstream-runner": "./src/cli.ts"
+  },
+  "scripts": {
+    "test": "/Users/zeke/.nvm/versions/node/v22.23.2/bin/node --import tsx --test test/*.test.ts",
+    "start": "/Users/zeke/.nvm/versions/node/v22.23.2/bin/node --import tsx src/main.ts",
+    "typecheck": "/Users/zeke/.nvm/versions/node/v22.23.2/bin/node node_modules/typescript/bin/tsc --noEmit"
+  },
+  "dependencies": {
+    "@earendil-works/pi-durable": "1.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.2",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}
