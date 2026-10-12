@@ -6,13 +6,19 @@ Create a separate developer-platform public app for this MCP service. Do not add
 
 ## Install scopes
 
-Required: `oauth`.
+Required: `oauth`, plus every requested scope whose official catalog row says it is available to all accounts. Those names are `required` in [`../registers/scope-manifest.json`](../registers/scope-manifest.json).
 
-Optional: every scope in [`../registers/scope-manifest.json`](../registers/scope-manifest.json) `optional`. Product-gated and endpoint-only scopes are optional so a missing product or an unrecognized optional string can be dropped or reported without blocking the whole install. If HubSpot rejects an optional string as invalid, stop and remove that string. Do not replace it with a wildcard.
+Optional: product-gated scopes and endpoint scopes that were not in the catalog table. A missing product should not block install. If HubSpot rejects an optional string as invalid, stop and remove that string. Do not replace it with a wildcard.
 
 Omitted: the `omitted` array in the same file, including the three mandatory exclusions, deprecated scopes, no-API scopes, beta candidates, and scopes with no implemented operation.
 
-HubSpot redirect for this app, once a host is approved: `https://<approved-host>/hubspot/oauth/callback`. Local development uses `http://127.0.0.1:8787/hubspot/oauth/callback`. Do not register `http://127.0.0.1:3118/callback` on this app. That URL belongs to the existing hosted MCP connector.
+Draft app config: [`../proposed/app-hsmeta.json`](../proposed/app-hsmeta.json). It is not uploaded. Its `requiredScopes` and `optionalScopes` are copied from the manifest. Its only redirect is `http://127.0.0.1:8787/hubspot/oauth/callback`. After a host is approved, replace that redirect with `https://<approved-host>/hubspot/oauth/callback` before creating the app. Do not register `http://127.0.0.1:3118/callback` on this app. That URL belongs to the existing hosted MCP connector.
+
+Install URL, filled in only after the app exists:
+
+`https://app.hubspot.com/oauth/authorize?client_id=<APP_CLIENT_ID>&redirect_uri=<encoded callback>&scope=<required scopes, space separated>&optional_scope=<optional scopes, space separated>`
+
+The client id comes from the new app. Do not reuse the hosted connector client id.
 
 ## Layer 1, clients of this MCP service
 

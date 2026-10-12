@@ -1,4 +1,5 @@
 import { createServer } from "node:http";
+import { assertProductionSecrets } from "./boot.ts";
 import { createApp, type AppConfig } from "./server.ts";
 
 const port = Number(process.env.PORT ?? 8787);
@@ -20,6 +21,7 @@ const config: AppConfig = {
   },
 };
 
+assertProductionSecrets(config);
 const app = await createApp(config);
 const server = createServer(async (req, res) => {
   const chunks: Buffer[] = [];

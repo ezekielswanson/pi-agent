@@ -542,6 +542,18 @@ def main() -> None:
                 "exclusionReason": None,
                 "discrepancy": "beta_candidate",
             }
+        if scope in EXCLUDED_SCOPES:
+            return {
+                "originalName": scope,
+                "canonicalName": scope,
+                "status": "excluded",
+                "products": "Excluded before install. Not requested even when an endpoint would otherwise allow it.",
+                "description": EXCLUDED_SCOPES[scope],
+                "coverage": coverage(ops, scope),
+                "sourceUrl": SCOPES_URL,
+                "exclusionReason": EXCLUDED_SCOPES[scope],
+                "discrepancy": None,
+            }
         return {
             "originalName": scope,
             "canonicalName": scope,
@@ -581,6 +593,36 @@ def main() -> None:
             }
         )
 
+    existing_originals = {row["originalName"] for row in scope_rows}
+    for scope in baseline:
+        if scope in existing_originals:
+            continue
+        extra = row_for_baseline(scope)
+        scope_rows.append(
+            {
+                "originalName": extra["originalName"],
+                "canonicalName": extra.get("canonicalName") or scope,
+                "status": extra.get("status") or "unverified",
+                "products": extra.get("products") or "",
+                "description": extra.get("description") or "",
+                "appAccess": "baseline audit row",
+                "coverage": extra.get("coverage") or coverage(ops, scope),
+                "companionScopes": extra.get("companionScopes") or "See the baseline matrix.",
+                "sourceUrl": extra.get("sourceUrl") or SCOPES_URL,
+                "docLinks": extra.get("docLinks") or [],
+                "retrievedAt": RETRIEVED,
+                "apiVersion": API_VERSION,
+                "requested": False,
+                "granted": "not_granted",
+                "implementedTools": [],
+                "tested": "not_runtime_tested",
+                "exclusionReason": extra.get("exclusionReason"),
+                "discrepancy": extra.get("discrepancy"),
+            }
+        )
+        existing_originals.add(scope)
+        by_name.setdefault(extra.get("canonicalName") or scope, scope_rows[-1])
+
     requested = []
     for row in scope_rows:
         scope = row["canonicalName"]
@@ -597,11 +639,13 @@ def main() -> None:
         tools = sorted({op["tool"] for op in ops if op["tool"] and any(scope in group["scopes"] for group in op["scopeGroups"])})
         row["implementedTools"] = tools
 
-    optional = sorted(set(requested) - {"oauth"})
-    if "oauth" in catalog_names:
-        required = ["oauth"]
-    else:
-        required = []
+    def all_accounts(scope: str) -> bool:
+        products = (by_name.get(scope) or {}).get("products") or ""
+        return products.lower().startswith("available to all accounts")
+
+    required = ["oauth"] if "oauth" in catalog_names or "oauth" in requested else []
+    required.extend(sorted(scope for scope in requested if scope != "oauth" and all_accounts(scope)))
+    optional = sorted(scope for scope in requested if scope not in required)
     omitted = []
     for scope, reason in sorted(EXCLUDED_SCOPES.items()):
         omitted.append({"scope": scope, "reason": reason})
@@ -689,6 +733,30 @@ def main() -> None:
     write("scope-manifest.json", {"required": required, "optional": optional, "omitted": omitted, "retrievedAt": RETRIEVED, "apiVersion": API_VERSION})
     write("tool-inventory.json", inventory)
     write("discovery-meta.json", meta)
+    proposal = ROOT / "proposed"
+    proposal.mkdir(exist_ok=True)
+    (proposal / "app-hsmeta.json").write_text(
+        json.dumps(
+            {
+                "uid": "hubspot_api_mcp",
+                "type": "app",
+                "config": {
+                    "name": "Apartment Life HubSpot API MCP",
+                    "description": "Draft only. This file is not uploaded. A separate public app for the custom API-backed MCP. It is not the hosted connector app.",
+                    "distribution": "private",
+                    "auth": {
+                        "type": "oauth",
+                        "redirectUrls": ["http://127.0.0.1:8787/hubspot/oauth/callback"],
+                        "requiredScopes": required,
+                        "optionalScopes": optional,
+                        "conditionallyRequiredScopes": [],
+                    },
+                },
+            },
+            indent=2,
+        )
+        + "\n"
+    )
     print(json.dumps({k: meta[k] for k in ("catalogCount", "operationCount", "implementedOperationCount", "baselineCount", "pageFailures")}, indent=2))
 
 

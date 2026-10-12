@@ -10,7 +10,7 @@
   "operationCount": 979,
   "implementedOperationCount": 905,
   "excludedOperationCount": 3,
-  "scopeRegisterCount": 246,
+  "scopeRegisterCount": 290,
   "baselineCount": 226,
   "baselineMatrixCount": 226,
   "endpointOnlyScopes": [
@@ -100,54 +100,6 @@
   ],
   "scopeConflicts": [
     {
-      "method": "PATCH",
-      "path": "/crm/objects/2026-09/{objectType}/{objectId}",
-      "sources": [
-        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/update-custom-object.md",
-        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/update-appointment.md"
-      ]
-    },
-    {
-      "method": "POST",
-      "path": "/crm/objects/2026-09/{objectType}/batch/read",
-      "sources": [
-        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/batch/get-custom-objects.md",
-        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/batch/get-appointments.md"
-      ]
-    },
-    {
-      "method": "POST",
-      "path": "/crm/objects/2026-09/{objectType}/batch/update",
-      "sources": [
-        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/batch/update-custom-objects.md",
-        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/batch/update-appointments.md"
-      ]
-    },
-    {
-      "method": "POST",
-      "path": "/crm/objects/2026-09/{objectType}/batch/archive",
-      "sources": [
-        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/batch/delete-custom-objects.md",
-        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/batch/delete-appointments.md"
-      ]
-    },
-    {
-      "method": "POST",
-      "path": "/crm/objects/2026-09/{objectType}",
-      "sources": [
-        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/create-custom-object.md",
-        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/create-appointment.md"
-      ]
-    },
-    {
-      "method": "GET",
-      "path": "/crm/objects/2026-09/{objectType}",
-      "sources": [
-        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/get-custom-objects.md",
-        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/get-appointments.md"
-      ]
-    },
-    {
       "method": "POST",
       "path": "/crm/objects/2026-09/{objectType}/batch/upsert",
       "sources": [
@@ -157,10 +109,10 @@
     },
     {
       "method": "POST",
-      "path": "/crm/objects/2026-09/{objectType}/search",
+      "path": "/crm/objects/2026-09/{objectType}/batch/create",
       "sources": [
-        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/search/search-custom-objects.md",
-        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/search/search-appointments.md"
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/batch/create-custom-objects.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/batch/create-appointments.md"
       ]
     },
     {
@@ -173,10 +125,34 @@
     },
     {
       "method": "GET",
-      "path": "/crm/objects/2026-09/{objectType}/{objectId}",
+      "path": "/crm/objects/2026-09/{objectType}",
       "sources": [
-        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/get-custom-object.md",
-        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/get-appointment.md"
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/get-custom-objects.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/get-appointments.md"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/crm/objects/2026-09/{objectType}",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/create-custom-object.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/create-appointment.md"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/crm/objects/2026-09/{objectType}/batch/archive",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/batch/delete-custom-objects.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/batch/delete-appointments.md"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/crm/objects/2026-09/{objectType}/batch/read",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/batch/get-custom-objects.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/batch/get-appointments.md"
       ]
     },
     {
@@ -188,11 +164,35 @@
       ]
     },
     {
-      "method": "POST",
-      "path": "/crm/objects/2026-09/{objectType}/batch/create",
+      "method": "GET",
+      "path": "/crm/objects/2026-09/{objectType}/{objectId}",
       "sources": [
-        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/batch/create-custom-objects.md",
-        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/batch/create-appointments.md"
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/get-custom-object.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/get-appointment.md"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/crm/objects/2026-09/{objectType}/{objectId}",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/update-custom-object.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/update-appointment.md"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/crm/objects/2026-09/{objectType}/search",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/search/search-custom-objects.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/search/search-appointments.md"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/crm/objects/2026-09/{objectType}/batch/update",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/batch/update-custom-objects.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/batch/update-appointments.md"
       ]
     },
     {
@@ -205,18 +205,18 @@
     },
     {
       "method": "GET",
-      "path": "/crm/objects/2026-09/{objectType}",
-      "sources": [
-        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/get-custom-objects.md",
-        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/price-book-items/get-price-book-items.md"
-      ]
-    },
-    {
-      "method": "GET",
       "path": "/crm/objects/2026-09/{objectType}/{objectId}",
       "sources": [
         "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/get-custom-object.md",
         "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/price-book-items/get-price-book-item.md"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/crm/objects/2026-09/{objectType}",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/get-custom-objects.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/price-book-items/get-price-book-items.md"
       ]
     },
     {
@@ -263,8 +263,8 @@
       "method": "POST",
       "path": "/crm/extensions/calling/2026-09/inbound-call",
       "sources": [
-        "https://developers.hubspot.com/docs/api-reference/latest/crm/extensions/transcriptions/transcribe-inbound.md",
-        "https://developers.hubspot.com/docs/api-reference/latest/crm/extensions/calling-extensions/inbound/create-inbound-call.md"
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/extensions/calling-extensions/inbound/create-inbound-call.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/extensions/transcriptions/transcribe-inbound.md"
       ]
     },
     {

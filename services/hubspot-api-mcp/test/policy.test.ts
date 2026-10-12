@@ -156,6 +156,43 @@ test("approvals are single use and bound to the payload", () => {
   );
 });
 
+test("every baseline scope has a scope-register row and required scopes are all-account", () => {
+  const baseline = loadBaseline();
+  const manifest = loadManifest();
+  const register = JSON.parse(readFileSync(new URL("../registers/scope-register.json", import.meta.url), "utf8")) as {
+    originalName: string;
+    canonicalName: string;
+    products: string;
+  }[];
+  const originals = new Set(register.map((row) => row.originalName));
+  for (const scope of baseline) assert.equal(originals.has(scope), true, scope);
+  const products = new Map(register.map((row) => [row.canonicalName, row.products]));
+  assert.equal(manifest.required[0], "oauth");
+  assert.ok(manifest.required.length > 1);
+  for (const scope of manifest.required) {
+    if (scope === "oauth") continue;
+    assert.match(products.get(scope) ?? "", /^Available to all accounts/i, scope);
+  }
+  for (const scope of manifest.optional) {
+    assert.equal((products.get(scope) ?? "").toLowerCase().startsWith("available to all accounts"), false, scope);
+  }
+});
+
+test("stale proposals cannot be approved", () => {
+  resetApprovals();
+  const op = operation("delete-crm-objects-2026-09-contacts-contactid");
+  const proposal = prepareChange({
+    actor: "ada",
+    clientId: "pi",
+    portalId: "5627913",
+    operation: op,
+    params: { pathParams: { contactId: "42" } },
+    resolvedPath: "/crm/objects/2026-09/contacts/42",
+    ttlMs: -1,
+  });
+  assert.throws(() => approveProposal({ proposalId: proposal.id, actor: "ada", portalId: "5627913", secret: "test-secret" }), /expired/);
+});
+
 test("redaction removes secrets", () => {
   assert.equal((redact({ access_token: "secret", id: "1" }) as { access_token: string }).access_token, "[redacted]");
   assert.match(redactText("Authorization: Bearer abc.def refresh_token=zzz"), /redacted/);

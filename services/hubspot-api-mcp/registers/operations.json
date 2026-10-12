@@ -9790,21 +9790,21 @@
   },
   {
     "id": "post-crm-extensions-calling-2026-09-inbound-call",
-    "title": "Transcribe inbound call",
-    "summary": "This endpoint processes inbound calls by accepting a request with details about the call. It requires a JSON payload containing information such as the call's external ID, final status, and phone numbers involved. This operation is useful for integrating third-party call data into HubSpot, allowing for seamless tracking and management of inbound calls.",
+    "title": "Submit details of an inbound call to the CRM.",
+    "summary": "This endpoint allows you to submit information about an inbound call to the CRM system. The request must include details such as the external call ID, call status, and involved phone numbers. This operation helps in logging and managing inbound call data within the CRM.",
     "domain": "crm",
     "method": "POST",
     "path": "/crm/extensions/calling/2026-09/inbound-call",
-    "spec": "2026-09/crm-transcriptions-v2026-09.json",
+    "spec": "2026-09/crm-calling-extensions-v2026-09.json",
     "version": "2026-09",
     "scopeGroups": [
       {
         "mode": "any",
         "scopes": [
-          "crm.schemas.contacts.write",
-          "crm.objects.contacts.write",
           "crm.objects.contacts.highly_sensitive.write.v2",
-          "crm.objects.contacts.sensitive.write.v2"
+          "crm.objects.contacts.write",
+          "crm.objects.contacts.sensitive.write.v2",
+          "crm.schemas.contacts.write"
         ],
         "description": "This API requires one of the following scopes:"
       }
@@ -9816,7 +9816,7 @@
     "excluded": false,
     "exclusionReason": null,
     "tool": null,
-    "sourceUrl": "https://developers.hubspot.com/docs/api-reference/latest/crm/extensions/transcriptions/transcribe-inbound.md",
+    "sourceUrl": "https://developers.hubspot.com/docs/api-reference/latest/crm/extensions/calling-extensions/inbound/create-inbound-call.md",
     "retrievedAt": "2026-10-12",
     "implemented": false,
     "tested": "mock_not_run",
@@ -12996,12 +12996,12 @@
     "excluded": false,
     "exclusionReason": null,
     "tool": "hubspot_prepare_change",
-    "sourceUrl": "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/services/update-service-objectId.md",
+    "sourceUrl": "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/services/update-service.md",
     "retrievedAt": "2026-10-12",
     "implemented": true,
     "tested": "mock_not_run",
     "alsoSeenAt": [
-      "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/services/update-service.md"
+      "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/services/update-service-objectId.md"
     ]
   },
   {
@@ -17993,12 +17993,12 @@
     "excluded": false,
     "exclusionReason": null,
     "tool": "hubspot_prepare_change",
-    "sourceUrl": "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/invoices/update-invoice-objectId.md",
+    "sourceUrl": "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/invoices/update-invoice.md",
     "retrievedAt": "2026-10-12",
     "implemented": true,
     "tested": "mock_not_run",
     "alsoSeenAt": [
-      "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/invoices/update-invoice.md"
+      "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/invoices/update-invoice-objectId.md"
     ]
   },
   {
@@ -19817,7 +19817,7 @@
   },
   {
     "id": "patch-crm-objects-2026-09-partner-clients-partnerclientid",
-    "title": "Update a partner client",
+    "title": "Update properties of a specific partner client.",
     "summary": "Perform a partial update of an Object identified by `{objectId}`. `{objectId}` refers to the internal object ID by default, or optionally any unique property value as specified by the `idProperty` query param. Provided property values will be overwritten. Read-only and non-existent properties will be ignored. Properties values can be cleared by passing an empty string.",
     "domain": "crm",
     "method": "PATCH",
@@ -19840,12 +19840,12 @@
     "excluded": false,
     "exclusionReason": null,
     "tool": "hubspot_prepare_change",
-    "sourceUrl": "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/partner-clients/update-partner-client.md",
+    "sourceUrl": "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/partner-clients/update-partner-client-objectId.md",
     "retrievedAt": "2026-10-12",
     "implemented": true,
     "tested": "mock_not_run",
     "alsoSeenAt": [
-      "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/partner-clients/update-partner-client-objectId.md"
+      "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/partner-clients/update-partner-client.md"
     ]
   },
   {
@@ -20023,12 +20023,12 @@
     "excluded": false,
     "exclusionReason": null,
     "tool": "hubspot_prepare_change",
-    "sourceUrl": "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/partner-services/update-partner-service.md",
+    "sourceUrl": "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/partner-services/update-partner-service-objectId.md",
     "retrievedAt": "2026-10-12",
     "implemented": true,
     "tested": "mock_not_run",
     "alsoSeenAt": [
-      "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/partner-services/update-partner-service-objectId.md"
+      "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/partner-services/update-partner-service.md"
     ]
   },
   {
@@ -20356,12 +20356,12 @@
     "excluded": false,
     "exclusionReason": null,
     "tool": "hubspot_prepare_change",
-    "sourceUrl": "https://developers.hubspot.com/docs/api-reference/latest/crm/activities/postal-mail/update-postal-mail-objectId.md",
+    "sourceUrl": "https://developers.hubspot.com/docs/api-reference/latest/crm/activities/postal-mail/update-postal-mail.md",
     "retrievedAt": "2026-10-12",
     "implemented": true,
     "tested": "mock_not_run",
     "alsoSeenAt": [
-      "https://developers.hubspot.com/docs/api-reference/latest/crm/activities/postal-mail/update-postal-mail.md"
+      "https://developers.hubspot.com/docs/api-reference/latest/crm/activities/postal-mail/update-postal-mail-objectId.md"
     ]
   },
   {
@@ -21377,7 +21377,7 @@
   },
   {
     "id": "patch-crm-objects-2026-09-quotes-quoteid",
-    "title": "Partially update a quote",
+    "title": "Update a quote",
     "summary": "Perform a partial update of an Object identified by `{quoteId}`or optionally a unique property value as specified by the `idProperty` query param. `{quoteId}` refers to the internal object ID by default, and the `idProperty` query param refers to a property whose values are unique for the object. Provided property values will be overwritten. Read-only and non-existent properties will result in an error. Properties values can be cleared by passing an empty string.",
     "domain": "crm",
     "method": "PATCH",
@@ -21401,12 +21401,12 @@
     "excluded": false,
     "exclusionReason": null,
     "tool": "hubspot_prepare_change",
-    "sourceUrl": "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/quotes/update-quote.md",
+    "sourceUrl": "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/quotes/update-quote-objectId.md",
     "retrievedAt": "2026-10-12",
     "implemented": true,
     "tested": "mock_not_run",
     "alsoSeenAt": [
-      "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/quotes/update-quote-objectId.md"
+      "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/quotes/update-quote.md"
     ]
   },
   {

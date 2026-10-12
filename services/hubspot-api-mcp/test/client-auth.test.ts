@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { createHash, randomBytes } from "node:crypto";
 import { McpAuth } from "../src/auth/provider.ts";
+import { assertProductionSecrets } from "../src/boot.ts";
 import { HubSpotClient } from "../src/hubspot/client.ts";
 import { exchangeHubSpotCode, getValidGrant, resetRefreshLocks } from "../src/hubspot/oauth.ts";
 import { TokenStore } from "../src/hubspot/tokenStore.ts";
@@ -126,6 +127,61 @@ test("mcp tokens reject the wrong audience, client, and user", async () => {
       ),
     /not approved/,
   );
+  const otherIssuer = new McpAuth({
+    issuer: "http://evil.example",
+    resource: "http://127.0.0.1:8787/mcp",
+    secret: "auth-secret",
+    portalId: "5627913",
+    allowedUsers: ["ada"],
+    cimdHosts: [],
+    clients: [{ clientId: "pi", redirectUris: ["http://127.0.0.1/callback"], publicClient: true }],
+  });
+  await assert.rejects(() => otherIssuer.verifyAccessToken(access), /Issuer/);
+});
+
+test("sensitive properties are omitted and exports are capped", async () => {
+  let requested = "";
+  const client = new HubSpotClient({
+    fetchImpl: async (input) => {
+      requested = String(input);
+      if (requested.includes("/exports/")) {
+        return new Response(JSON.stringify({ results: Array.from({ length: 12 }, (_, index) => index) }), { status: 200 });
+      }
+      return new Response(JSON.stringify({ properties: { email: "a@example.com", ssn: "123", firstname: "Ada" } }), { status: 200 });
+    },
+  });
+  const readResult = await client.call({
+    operation: read,
+    params: { pathParams: { contactId: "1" }, query: { properties: "email,ssn,firstname" } },
+    token: "hubspot-token",
+    grantedScopes: read.scopeGroups.flatMap((group) => group.scopes),
+  });
+  const properties = (readResult.body as { properties: Record<string, string> }).properties;
+  assert.equal(properties.ssn, undefined);
+  assert.equal(properties.email, "a@example.com");
+  assert.equal(requested.includes("ssn"), false);
+  const exportOperation = { ...read, id: "get-crm-exports-2026-09", path: "/crm/v3/exports/export" };
+  const exported = await client.call({
+    operation: exportOperation,
+    params: {},
+    token: "hubspot-token",
+    grantedScopes: read.scopeGroups.flatMap((group) => group.scopes),
+    followPages: true,
+  });
+  assert.equal((exported.body as { results: number[] }).results.length, 10);
+  assert.equal(exported.truncated, true);
+});
+
+test("production boot refuses the local test signer", () => {
+  const previous = process.env.NODE_ENV;
+  process.env.NODE_ENV = "production";
+  try {
+    assert.throws(() => assertProductionSecrets({ authSecret: "auth-secret", approvalSecret: "production-approval-secret" }), /test signer/);
+    assert.doesNotThrow(() => assertProductionSecrets({ authSecret: "production-auth-secret", approvalSecret: "production-approval-secret" }));
+  } finally {
+    if (previous === undefined) delete process.env.NODE_ENV;
+    else process.env.NODE_ENV = previous;
+  }
 });
 
 test("hubspot refresh is single flight and portal mismatches are rejected", async () => {
