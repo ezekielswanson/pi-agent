@@ -107,11 +107,13 @@ export class HubSpotClient {
       body: body !== undefined && operation.method !== "GET" ? JSON.stringify(body) : undefined,
     };
     let response = await this.fetchImpl(url, init);
+    let correlationId = response.headers.get("x-hubspot-correlation-id");
     const retryable = operation.effect === "read" && (response.status === 429 || response.status === 503);
     if (retryable) {
       const wait = retryDelay(response);
       await this.sleep(wait);
       response = await this.fetchImpl(url, init);
+      correlationId = response.headers.get("x-hubspot-correlation-id") ?? correlationId;
     }
     const text = await response.text();
     let parsed: unknown = null;
@@ -125,7 +127,7 @@ export class HubSpotClient {
     return {
       status: response.status,
       body: parsed,
-      correlationId: response.headers.get("x-hubspot-correlation-id"),
+      correlationId,
     };
   }
 }
