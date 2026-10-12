@@ -1,0 +1,277 @@
+[
+  {
+    "name": "hubspot_account-info_read",
+    "operationCount": 5,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "account-info"
+    ],
+    "dispatch": "operationId allowlist; path and method come from the operation register"
+  },
+  {
+    "name": "hubspot_app-webhooks_read",
+    "operationCount": 3,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "app-webhooks"
+    ],
+    "dispatch": "operationId allowlist; path and method come from the operation register"
+  },
+  {
+    "name": "hubspot_automation_read",
+    "operationCount": 14,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "automation"
+    ],
+    "dispatch": "operationId allowlist; path and method come from the operation register"
+  },
+  {
+    "name": "hubspot_cms_read",
+    "operationCount": 55,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "cms"
+    ],
+    "dispatch": "operationId allowlist; path and method come from the operation register"
+  },
+  {
+    "name": "hubspot_commerce_read",
+    "operationCount": 7,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "commerce"
+    ],
+    "dispatch": "operationId allowlist; path and method come from the operation register"
+  },
+  {
+    "name": "hubspot_communication-preferences_read",
+    "operationCount": 4,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "communication-preferences"
+    ],
+    "dispatch": "operationId allowlist; path and method come from the operation register"
+  },
+  {
+    "name": "hubspot_conversations_read",
+    "operationCount": 14,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "conversations"
+    ],
+    "dispatch": "operationId allowlist; path and method come from the operation register"
+  },
+  {
+    "name": "hubspot_crm-object-schemas_read",
+    "operationCount": 3,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "crm-object-schemas"
+    ],
+    "dispatch": "operationId allowlist; path and method come from the operation register"
+  },
+  {
+    "name": "hubspot_crm_read",
+    "operationCount": 181,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "crm"
+    ],
+    "dispatch": "operationId allowlist; path and method come from the operation register"
+  },
+  {
+    "name": "hubspot_data-studio_read",
+    "operationCount": 1,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "data-studio"
+    ],
+    "dispatch": "operationId allowlist; path and method come from the operation register"
+  },
+  {
+    "name": "hubspot_deal-splits_read",
+    "operationCount": 1,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "deal-splits"
+    ],
+    "dispatch": "operationId allowlist; path and method come from the operation register"
+  },
+  {
+    "name": "hubspot_events_read",
+    "operationCount": 4,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "events"
+    ],
+    "dispatch": "operationId allowlist; path and method come from the operation register"
+  },
+  {
+    "name": "hubspot_feature-flags_read",
+    "operationCount": 4,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "feature-flags"
+    ],
+    "dispatch": "operationId allowlist; path and method come from the operation register"
+  },
+  {
+    "name": "hubspot_files_read",
+    "operationCount": 3,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "files"
+    ],
+    "dispatch": "operationId allowlist; path and method come from the operation register"
+  },
+  {
+    "name": "hubspot_marketing_read",
+    "operationCount": 28,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "marketing"
+    ],
+    "dispatch": "operationId allowlist; path and method come from the operation register"
+  },
+  {
+    "name": "hubspot_media-bridge_read",
+    "operationCount": 6,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "media-bridge"
+    ],
+    "dispatch": "operationId allowlist; path and method come from the operation register"
+  },
+  {
+    "name": "hubspot_notetaker_read",
+    "operationCount": 1,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "notetaker"
+    ],
+    "dispatch": "operationId allowlist; path and method come from the operation register"
+  },
+  {
+    "name": "hubspot_scheduler_read",
+    "operationCount": 3,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "scheduler"
+    ],
+    "dispatch": "operationId allowlist; path and method come from the operation register"
+  },
+  {
+    "name": "hubspot_settings_read",
+    "operationCount": 16,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "settings"
+    ],
+    "dispatch": "operationId allowlist; path and method come from the operation register"
+  },
+  {
+    "name": "hubspot_tax-rates_read",
+    "operationCount": 2,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "tax-rates"
+    ],
+    "dispatch": "operationId allowlist; path and method come from the operation register"
+  },
+  {
+    "name": "hubspot_url-mappings_read",
+    "operationCount": 2,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "url-mappings"
+    ],
+    "dispatch": "operationId allowlist; path and method come from the operation register"
+  },
+  {
+    "name": "hubspot_list_operations",
+    "operationCount": 905,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "registry"
+    ],
+    "dispatch": "filters the operation register"
+  },
+  {
+    "name": "hubspot_prepare_change",
+    "operationCount": 548,
+    "effects": [
+      "mutate"
+    ],
+    "domains": [
+      "all implemented mutate operations"
+    ],
+    "dispatch": "prepares an allowlisted mutation"
+  },
+  {
+    "name": "hubspot_execute_change",
+    "operationCount": 548,
+    "effects": [
+      "mutate"
+    ],
+    "domains": [
+      "all implemented mutate operations"
+    ],
+    "dispatch": "executes a single-use server approval"
+  },
+  {
+    "name": "hubspot_capabilities",
+    "operationCount": 0,
+    "effects": [
+      "read"
+    ],
+    "domains": [
+      "registry"
+    ],
+    "dispatch": "returns coverage counts and grant state"
+  }
+]

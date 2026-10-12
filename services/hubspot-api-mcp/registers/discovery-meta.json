@@ -1,0 +1,284 @@
+{
+  "retrievedAt": "2026-10-12",
+  "apiVersion": "2026-09",
+  "versioningUrl": "https://developers.hubspot.com/docs/developer-tooling/platform/versioning",
+  "scopesUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes",
+  "docsIndexUrl": "https://developers.hubspot.com/docs/llms.txt",
+  "apiIndexUrl": "https://developers.hubspot.com/docs/_llms/apis/2026-09.txt",
+  "catalogCount": 163,
+  "pagesDiscovered": 1178,
+  "operationCount": 979,
+  "implementedOperationCount": 905,
+  "excludedOperationCount": 3,
+  "scopeRegisterCount": 246,
+  "baselineCount": 226,
+  "baselineMatrixCount": 226,
+  "endpointOnlyScopes": [
+    "automation.email_templates.read",
+    "automation.email_templates.write",
+    "automation.sequences.create",
+    "automation.sequences.delete",
+    "automation.sequences.edit",
+    "cms.knowledge_base.settings.read",
+    "cms.knowledge_base.settings.write",
+    "commerce.payment_accounts.read",
+    "commerce.payment_links.read",
+    "commerce.payment_links.write",
+    "cpq.price_books.read",
+    "cpq.price_books.write",
+    "cpq.quotes.read",
+    "cpq.quotes.write",
+    "crm-pipelines-governance-read",
+    "crm-pipelines-governance-write",
+    "crm-pipelines-locked-stages-access",
+    "crm-pipelines-object-label-access",
+    "crm.extensions_calling_transcripts.read",
+    "crm.extensions_calling_transcripts.write",
+    "crm.objects.appointments.sensitive.read.v2",
+    "crm.objects.appointments.sensitive.write.v2",
+    "crm.objects.calls.read",
+    "crm.objects.commercepayments.write",
+    "crm.objects.companies.highly_sensitive.read.v2",
+    "crm.objects.companies.highly_sensitive.write.v2",
+    "crm.objects.companies.sensitive.read.v2",
+    "crm.objects.companies.sensitive.write.v2",
+    "crm.objects.contacts.highly_sensitive.read.v2",
+    "crm.objects.contacts.highly_sensitive.write.v2",
+    "crm.objects.contacts.sensitive.read.v2",
+    "crm.objects.contacts.sensitive.write.v2",
+    "crm.objects.contracts.read",
+    "crm.objects.custom.highly_sensitive.read.v2",
+    "crm.objects.custom.highly_sensitive.write.v2",
+    "crm.objects.custom.sensitive.read.v2",
+    "crm.objects.custom.sensitive.write.v2",
+    "crm.objects.deals.highly_sensitive.read.v2",
+    "crm.objects.deals.highly_sensitive.write.v2",
+    "crm.objects.deals.sensitive.read.v2",
+    "crm.objects.deals.sensitive.write.v2",
+    "crm.objects.emails.read",
+    "crm.objects.feedback_submissions.read",
+    "crm.objects.goals.write",
+    "crm.objects.invoices.write",
+    "crm.objects.meetings.read",
+    "crm.objects.notes.read",
+    "crm.objects.products.read",
+    "crm.objects.products.write",
+    "crm.objects.projects.highly_sensitive.read",
+    "crm.objects.projects.highly_sensitive.write",
+    "crm.objects.projects.read",
+    "crm.objects.projects.sensitive.read",
+    "crm.objects.projects.sensitive.write",
+    "crm.objects.projects.write",
+    "crm.objects.subscriptions.write",
+    "crm.objects.tasks.read",
+    "crm.schemas.calls.read",
+    "crm.schemas.commercepayments.write",
+    "crm.schemas.custom.write",
+    "crm.schemas.emails.read",
+    "crm.schemas.meetings.read",
+    "crm.schemas.meetings.write",
+    "crm.schemas.notes.read",
+    "crm.schemas.projects.read",
+    "crm.schemas.projects.write",
+    "crm.schemas.tasks.read",
+    "crm.schemas.tickets.read",
+    "crm.schemas.tickets.write",
+    "data_integration.data_source.file.read",
+    "data_integration.data_source.file.write",
+    "deal-approval-read",
+    "developers-read",
+    "developers-write",
+    "e-commerce",
+    "files.sensitive.read",
+    "pipeline-level-permissions-access",
+    "private-apps-read",
+    "private-apps-write",
+    "revenue.contracts.read",
+    "revenue.contracts.write",
+    "tickets.highly_sensitive.v2",
+    "tickets.sensitive.v2"
+  ],
+  "scopeConflicts": [
+    {
+      "method": "PATCH",
+      "path": "/crm/objects/2026-09/{objectType}/{objectId}",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/update-custom-object.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/update-appointment.md"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/crm/objects/2026-09/{objectType}/batch/read",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/batch/get-custom-objects.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/batch/get-appointments.md"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/crm/objects/2026-09/{objectType}/batch/update",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/batch/update-custom-objects.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/batch/update-appointments.md"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/crm/objects/2026-09/{objectType}/batch/archive",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/batch/delete-custom-objects.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/batch/delete-appointments.md"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/crm/objects/2026-09/{objectType}",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/create-custom-object.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/create-appointment.md"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/crm/objects/2026-09/{objectType}",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/get-custom-objects.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/get-appointments.md"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/crm/objects/2026-09/{objectType}/batch/upsert",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/batch/upsert-custom-objects.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/batch/upsert-appointments.md"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/crm/objects/2026-09/{objectType}/search",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/search/search-custom-objects.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/search/search-appointments.md"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/crm/objects/2026-09/{objectType}/{objectId}",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/delete-custom-object.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/delete-appointment.md"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/crm/objects/2026-09/{objectType}/{objectId}",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/get-custom-object.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/get-appointment.md"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/crm/objects/2026-09/{objectType}/merge",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/merge-custom-objects.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/merge/merge-appointments.md"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/crm/objects/2026-09/{objectType}/batch/create",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/batch/create-custom-objects.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/appointments/batch/create-appointments.md"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/crm/objects/2026-09/{objectType}/search",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/search/search-custom-objects.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/forecasts/search/search-forecasts.md"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/crm/objects/2026-09/{objectType}",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/get-custom-objects.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/price-book-items/get-price-book-items.md"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/crm/objects/2026-09/{objectType}/{objectId}",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/get-custom-object.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/price-book-items/get-price-book-item.md"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/crm/objects/2026-09/{objectType}/batch/read",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/batch/get-custom-objects.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/price-books/batch/get-price-books.md"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/crm/objects/2026-09/{objectType}/{objectId}",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/get-custom-object.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/price-books/get-price-book.md"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/crm/objects/2026-09/{objectType}",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/get-custom-objects.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/price-books/get-price-books.md"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/crm/objects/2026-09/{objectType}/batch/read",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/custom-objects/batch/get-custom-objects.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/objects/price-book-items/batch/get-price-book-items.md"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/crm/associations/2026-09/definitions/configurations/{fromObjectType}/{toObjectType}/batch/create",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/associations/associations-schema/limits/create-associations-limits.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/associations/associations-schema/labels/create-associations-label-batch.md"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/crm/extensions/calling/2026-09/inbound-call",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/extensions/transcriptions/transcribe-inbound.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/crm/extensions/calling-extensions/inbound/create-inbound-call.md"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/app-webhooks/2026-09/{appId}/subscriptions/batch/update",
+      "sources": [
+        "https://developers.hubspot.com/docs/api-reference/latest/webhooks/subscriptions/batch/create-webhooks.md",
+        "https://developers.hubspot.com/docs/api-reference/latest/webhooks-journal/subscriptions/update-webhooks.md"
+      ]
+    }
+  ],
+  "pageFailures": [],
+  "accountLogin": "not_performed",
+  "granted": "not_granted",
+  "liveHubSpotCalls": "none",
+  "completeness": "Catalog rows are the first-column scopes from the official scopes page HTML table on the retrieval date. Operations are 2026-09 API reference pages reached from the official docs index that publish a method, path, and Required Scopes block. 2027-03-beta specs were not implemented. A guessed absolute spec JSON URL returned 404 during planning; this register uses the rendered API reference pages instead. Account installer acceptance was not checked."
+}

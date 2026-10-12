@@ -16,4 +16,5 @@ clients/*/.env.*
 .pi/**/*credentials*
 dist/
 *.log
+services/hubspot-api-mcp/data/
 .DS_Store
