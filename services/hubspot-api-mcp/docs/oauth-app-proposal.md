@@ -1,8 +1,14 @@
 # HubSpot OAuth app proposal
 
-This is a proposal. No HubSpot app has been created, and no OAuth consent has been started.
+The existing MCP connector is app `55630741` on portal `5627913`:
 
-Create a separate developer-platform public app for this MCP service. Do not add these scopes to the existing MCP connector app `55630741`.
+https://app.hubspot.com/mcp-connectors/5627913/app/55630741
+
+HubSpot's connector form has name, description, redirect URL, and icon. It does not have a scope list. Scopes on that app are the tools available on `https://mcp.hubspot.com` at installation, plus the permissions the user grants. When HubSpot adds tools, the installed user disconnects and reconnects to grant them. The standard-API register below is not pasted into app `55630741`.
+
+On 2026-10-14, Chrome opened that connector URL from this agent. HubSpot returned the sign-in page with authentication expired for portal `5627913`. No connector setting was changed.
+
+This file remains the proposal for a standard-API OAuth app. No such app has been created, and no OAuth consent has been started.
 
 ## Install scopes
 
@@ -18,7 +24,7 @@ Install URL, filled in only after the app exists:
 
 `https://app.hubspot.com/oauth/authorize?client_id=<APP_CLIENT_ID>&redirect_uri=<encoded callback>&scope=<required scopes, space separated>&optional_scope=<optional scopes, space separated>`
 
-The client id comes from the new app. Do not reuse the hosted connector client id.
+The client id for a standard-API app comes from that app after it is created. App `55630741` keeps its own connector client id and the redirect `http://127.0.0.1:3118/callback`.
 
 ## Layer 1, clients of this MCP service
 

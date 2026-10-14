@@ -13,7 +13,9 @@ Counts below come from [`registers/discovery-meta.json`](registers/discovery-met
 - 3 operations excluded by policy
 - 0 live HubSpot calls, 0 granted installs
 
-`oauth` is the only required install scope. Other verified scopes are optional so a missing product does not block installation. `files.delete`, `commerce.payment_links.delete`, and `business_units_view.read` are omitted.
+The existing HubSpot connector is app `55630741` on portal `5627913`: `https://app.hubspot.com/mcp-connectors/5627913/app/55630741`. HubSpot does not provide a scope field on that connector. Its scopes come from the tools on `https://mcp.hubspot.com` and from the permissions granted at install. A newer tool set requires disconnect and reconnect. This register is the standard-API scope list and is not pasted into that app.
+
+Required install scopes are `oauth` plus every implemented scope the catalog marks available to all accounts. Product-gated scopes are optional. `files.delete`, `commerce.payment_links.delete`, and `business_units_view.read` are omitted.
 
 ## Run locally
 
