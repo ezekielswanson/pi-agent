@@ -17,7 +17,7 @@ The guessed absolute URL `https://developers.hubspot.com/docs/specs/2026-09/...j
 From [`../registers/discovery-meta.json`](../registers/discovery-meta.json):
 
 - Catalog table rows: 163
-- Scope register rows, catalog plus endpoint-only discoveries: 246
+- Scope register rows, catalog plus endpoint-only discoveries: 290
 - Baseline rows: 226, matching [`../registers/baseline-scopes.txt`](../registers/baseline-scopes.txt)
 - API pages discovered: 1,178, with no page-fetch failures
 - Operations after method-and-path dedupe: 979
@@ -25,7 +25,7 @@ From [`../registers/discovery-meta.json`](../registers/discovery-meta.json):
 - Excluded: 3
 - Scope-documentation conflicts left unimplemented: see `scopeConflicts` in the meta file
 
-Baseline matrix statuses on this run: 150 current, 30 endpoint-only, 35 unverified, 9 beta, 2 legacy, and `automation.sequences.write` corrected. Re-count from the matrix after the next register build rather than treating this paragraph as a second source of truth.
+Baseline matrix statuses recounted from `baseline-matrix.json` on 2026-10-15: 150 current, 30 endpoint-only, 34 unverified, 9 beta, 2 legacy, and 1 corrected (`automation.sequences.write`). Re-count from the matrix after the next register build rather than treating this paragraph as a second source of truth.
 
 ## Exclusions
 

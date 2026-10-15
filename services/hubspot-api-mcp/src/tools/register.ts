@@ -2,7 +2,7 @@ import { McpServer } from "@modelcontextprotocol/server";
 import { z } from "zod";
 import { PolicyError } from "../policy/errors.ts";
 import type { OperationRecord } from "../registry/types.ts";
-import { executeOperation, listOperations, prepareOperation, readOperation, type ToolContext } from "./service.ts";
+import { capabilityReport, executeOperation, listOperations, prepareOperation, readOperation, type ToolContext } from "./service.ts";
 
 const params = {
   operationId: z.string().min(1).max(200),
@@ -26,15 +26,7 @@ export function registerHubSpotTools(server: McpServer, ctx: ToolContext, meta: 
       description: "Report documented scope coverage, implemented operations, and that live grants are separate from mocked tests.",
       annotations: { readOnlyHint: true, destructiveHint: false },
     },
-    async () => guard(async () => json({
-      retrievedAt: meta.retrievedAt,
-      apiVersion: meta.apiVersion,
-      implementedOperations: [...ctx.operations.values()].filter((operation) => operation.implemented).length,
-      excludedOperations: [...ctx.operations.values()].filter((operation) => operation.excluded).length,
-      granted: "not_granted_until_oauth",
-      runtime: "authorized_by_documented_scope_until_a_live_read_is_approved",
-      destructiveExecution: "untested_live",
-    })),
+    async () => guard(async () => json(await capabilityReport(ctx, meta))),
   );
 
   server.registerTool(
@@ -46,10 +38,12 @@ export function registerHubSpotTools(server: McpServer, ctx: ToolContext, meta: 
         domain: z.string().optional(),
         effect: z.enum(["read", "mutate"]).optional(),
         query: z.string().max(200).optional(),
+        cursor: z.number().int().nonnegative().optional(),
+        limit: z.number().int().positive().max(100).optional(),
       }),
       annotations: { readOnlyHint: true, destructiveHint: false },
     },
-    async (args) => guard(async () => json({ operations: listOperations(ctx.operations, args) })),
+    async (args) => guard(async () => json(listOperations(ctx.operations, args))),
   );
 
   for (const [name, operations] of readTools) {

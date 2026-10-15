@@ -154,6 +154,52 @@ test("approvals are single use and bound to the payload", () => {
     () => approveProposal({ proposalId: again.id, actor: "other", portalId: "5627913", secret: "test-secret" }),
     /actor/,
   );
+  const queryBound = prepareChange({
+    actor: "ada",
+    clientId: "pi",
+    portalId: "5627913",
+    operation: op,
+    params: { pathParams: { contactId: "42" }, query: { archived: false } },
+    resolvedPath: "/crm/objects/2026-09/contacts/42",
+  });
+  const queryToken = approveProposal({ proposalId: queryBound.id, actor: "ada", portalId: "5627913", secret: "test-secret" });
+  assert.throws(
+    () =>
+      consumeApproval({
+        token: queryToken.token,
+        secret: "test-secret",
+        actor: "ada",
+        clientId: "pi",
+        portalId: "5627913",
+        operation: op,
+        params: { pathParams: { contactId: "42" }, query: { archived: true } },
+        resolvedPath: "/crm/objects/2026-09/contacts/42",
+      }),
+    /payload/,
+  );
+  const clientBound = prepareChange({
+    actor: "ada",
+    clientId: "pi",
+    portalId: "5627913",
+    operation: op,
+    params,
+    resolvedPath: "/crm/objects/2026-09/contacts/42",
+  });
+  const clientToken = approveProposal({ proposalId: clientBound.id, actor: "ada", portalId: "5627913", secret: "test-secret" });
+  assert.throws(
+    () =>
+      consumeApproval({
+        token: clientToken.token,
+        secret: "test-secret",
+        actor: "ada",
+        clientId: "other",
+        portalId: "5627913",
+        operation: op,
+        params,
+        resolvedPath: "/crm/objects/2026-09/contacts/42",
+      }),
+    /caller/,
+  );
 });
 
 test("every baseline scope has a scope-register row and required scopes are all-account", () => {

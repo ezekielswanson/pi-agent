@@ -4,7 +4,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 import { createHash, randomBytes } from "node:crypto";
-import { McpAuth } from "../src/auth/provider.ts";
+import { hashPassword, McpAuth, type McpAuthConfig } from "../src/auth/provider.ts";
+import { RevocationLog } from "../src/auth/revocations.ts";
 import { assertProductionSecrets } from "../src/boot.ts";
 import { HubSpotClient } from "../src/hubspot/client.ts";
 import { exchangeHubSpotCode, getValidGrant, resetRefreshLocks } from "../src/hubspot/oauth.ts";
@@ -15,6 +16,28 @@ import { executeOperation, prepareOperation } from "../src/tools/service.ts";
 
 const read = loadOperations().find((operation) => operation.id === "get-crm-objects-2026-09-contacts-contactid");
 assert.ok(read);
+const password = "correct-horse-battery";
+const ada = { id: "ada", passwordHash: hashPassword(password) };
+
+function authConfig(overrides: Partial<McpAuthConfig> = {}): McpAuthConfig {
+  return {
+    issuer: "http://127.0.0.1:8787",
+    resource: "http://127.0.0.1:8787/mcp",
+    secret: "auth-secret",
+    portalId: "5627913",
+    allowedUsers: ["ada"],
+    users: [ada],
+    cimdHosts: [],
+    clients: [{ clientId: "pi", redirectUris: ["http://127.0.0.1/callback"], publicClient: true }],
+    ...overrides,
+  };
+}
+
+async function authorizedRedirect(auth: McpAuth, query: URLSearchParams): Promise<string> {
+  const requestId = await auth.beginAuthorization(query);
+  const session = auth.login("ada", password);
+  return auth.completeAuthorization(requestId, session);
+}
 
 test("reads follow pages up to the cap and writes are not retried", async () => {
   let calls = 0;
@@ -63,30 +86,21 @@ test("reads follow pages up to the cap and writes are not retried", async () => 
   assert.equal(denied.status, 429);
 });
 
-test("mcp tokens reject the wrong audience, client, and user", async () => {
-  const auth = new McpAuth({
-    issuer: "http://127.0.0.1:8787",
-    resource: "http://127.0.0.1:8787/mcp",
-    secret: "auth-secret",
-    portalId: "5627913",
-    allowedUsers: ["ada"],
-    cimdHosts: [],
-    clients: [{ clientId: "pi", redirectUris: ["http://127.0.0.1/callback"], publicClient: true }],
-  });
+test("mcp tokens reject a client-supplied subject, the wrong audience, and a bad login", async () => {
+  const auth = new McpAuth(authConfig());
   const verifier = "verifier-value";
   const challenge = createHash("sha256").update(verifier).digest("base64url");
-  const redirect = await auth.authorize(
-    new URLSearchParams({
-      response_type: "code",
-      client_id: "pi",
-      redirect_uri: "http://127.0.0.1:9999/callback",
-      state: "xyz",
-      code_challenge: challenge,
-      code_challenge_method: "S256",
-      resource: "http://127.0.0.1:8787/mcp",
-      subject: "ada",
-    }),
-  );
+  const query = new URLSearchParams({
+    response_type: "code",
+    client_id: "pi",
+    redirect_uri: "http://127.0.0.1:9999/callback",
+    state: "xyz",
+    code_challenge: challenge,
+    code_challenge_method: "S256",
+    resource: "http://127.0.0.1:8787/mcp",
+  });
+  await assert.rejects(() => auth.beginAuthorization(new URLSearchParams([...query.entries(), ["subject", "ada"]])), /subject/);
+  const redirect = await authorizedRedirect(auth, query);
   const code = new URL(redirect).searchParams.get("code");
   assert.equal(new URL(redirect).searchParams.get("iss"), "http://127.0.0.1:8787");
   const token = await auth.token(
@@ -95,11 +109,11 @@ test("mcp tokens reject the wrong audience, client, and user", async () => {
   const access = String(token.access_token);
   const info = await auth.verifyAccessToken(access);
   assert.equal(info.extra?.subject, "ada");
-  auth.revoke(access);
+  await auth.revoke(access);
   await assert.rejects(() => auth.verifyAccessToken(access), /revoked/);
   await assert.rejects(
     () =>
-      auth.authorize(
+      auth.beginAuthorization(
         new URLSearchParams({
           response_type: "code",
           client_id: "pi",
@@ -107,35 +121,12 @@ test("mcp tokens reject the wrong audience, client, and user", async () => {
           state: "xyz",
           code_challenge: challenge,
           code_challenge_method: "S256",
-          subject: "ada",
         }),
       ),
     /Redirect/,
   );
-  await assert.rejects(
-    () =>
-      auth.authorize(
-        new URLSearchParams({
-          response_type: "code",
-          client_id: "pi",
-          redirect_uri: "http://127.0.0.1/callback",
-          state: "xyz",
-          code_challenge: challenge,
-          code_challenge_method: "S256",
-          subject: "mallory",
-        }),
-      ),
-    /not approved/,
-  );
-  const otherIssuer = new McpAuth({
-    issuer: "http://evil.example",
-    resource: "http://127.0.0.1:8787/mcp",
-    secret: "auth-secret",
-    portalId: "5627913",
-    allowedUsers: ["ada"],
-    cimdHosts: [],
-    clients: [{ clientId: "pi", redirectUris: ["http://127.0.0.1/callback"], publicClient: true }],
-  });
+  assert.throws(() => auth.login("mallory", password), /Login rejected/);
+  const otherIssuer = new McpAuth(authConfig({ issuer: "http://evil.example" }));
   await assert.rejects(() => otherIssuer.verifyAccessToken(access), /Issuer/);
 });
 
@@ -160,24 +151,47 @@ test("sensitive properties are omitted and exports are capped", async () => {
   assert.equal(properties.ssn, undefined);
   assert.equal(properties.email, "a@example.com");
   assert.equal(requested.includes("ssn"), false);
-  const exportOperation = { ...read, id: "get-crm-exports-2026-09", path: "/crm/v3/exports/export" };
-  const exported = await client.call({
-    operation: exportOperation,
-    params: {},
-    token: "hubspot-token",
-    grantedScopes: read.scopeGroups.flatMap((group) => group.scopes),
-    followPages: true,
+  const granted = read.scopeGroups.flatMap((group) => group.scopes);
+  let exportCalls = 0;
+  const exportClient = new HubSpotClient({
+    fetchImpl: async () => {
+      exportCalls += 1;
+      return new Response(JSON.stringify({ results: Array.from({ length: 12 }, (_, index) => index) }), { status: 200 });
+    },
   });
-  assert.equal((exported.body as { results: number[] }).results.length, 10);
-  assert.equal(exported.truncated, true);
+  const exportOperation = { ...read, id: "get-crm-exports-2026-09", path: "/crm/v3/exports/export" };
+  await assert.rejects(
+    () => exportClient.call({ operation: exportOperation, params: {}, token: "hubspot-token", grantedScopes: granted, followPages: true }),
+    /Unbounded export retrieval is disabled/,
+  );
+  assert.equal(exportCalls, 0);
+  const createExport = { ...exportOperation, method: "POST" as const, id: "post-crm-exports-2026-09", path: "/crm/v3/exports" };
+  await assert.rejects(
+    () => exportClient.call({ operation: createExport, params: { body: {} }, token: "hubspot-token", grantedScopes: granted }),
+    /limit of 1 to 10/,
+  );
+  assert.equal(exportCalls, 0);
 });
 
-test("production boot refuses the local test signer", () => {
+test("production boot refuses weak secrets and a non-HTTPS issuer", () => {
   const previous = process.env.NODE_ENV;
   process.env.NODE_ENV = "production";
+  const strong = "production-auth-secret-with-variety-19";
+  const other = "production-approval-secret-variety-28";
   try {
-    assert.throws(() => assertProductionSecrets({ authSecret: "auth-secret", approvalSecret: "production-approval-secret" }), /test signer/);
-    assert.doesNotThrow(() => assertProductionSecrets({ authSecret: "production-auth-secret", approvalSecret: "production-approval-secret" }));
+    assert.throws(() => assertProductionSecrets({ authSecret: "auth-secret", approvalSecret: other }), /test signer/);
+    assert.throws(() => assertProductionSecrets({ authSecret: "production-auth-secret", approvalSecret: other }), /too weak/);
+    assert.throws(
+      () => assertProductionSecrets({ authSecret: strong, approvalSecret: other, issuer: "http://127.0.0.1:8787", revocationFile: "data/revocations.json" }),
+      /HTTPS/,
+    );
+    assert.throws(
+      () => assertProductionSecrets({ authSecret: strong, approvalSecret: other, issuer: "https://mcp.example" }),
+      /revocation file/,
+    );
+    assert.doesNotThrow(() =>
+      assertProductionSecrets({ authSecret: strong, approvalSecret: other, issuer: "https://mcp.example", revocationFile: "data/revocations.json" }),
+    );
   } finally {
     if (previous === undefined) delete process.env.NODE_ENV;
     else process.env.NODE_ENV = previous;

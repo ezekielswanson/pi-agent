@@ -1,6 +1,7 @@
 import { assertBatchBound, assertOperationAllowed, buildPath, scopesSatisfied } from "../policy/exclusions.ts";
 import { PolicyError } from "../policy/errors.ts";
 import { redact } from "../policy/redact.ts";
+import { assertRequestedProperties, assertWritableProperties, filterPropertyBag, filterPropertyList, objectNameFromPath } from "../policy/sensitivity.ts";
 import type { CallParams, OperationRecord } from "../registry/types.ts";
 
 export interface HubSpotCallResult {
@@ -52,18 +53,21 @@ export class HubSpotClient {
       throw new PolicyError("Granted HubSpot scopes do not satisfy this operation.", "scope");
     }
     assertBatchBound(input.params.body, input.operation.batch);
+    assertExportBounded(input.operation, input.params);
     const path = buildPath(input.operation.path, input.params.pathParams);
+    const objectName = objectNameFromPath(path);
+    const effect = input.operation.effect === "mutate" ? "mutate" : "read";
+    const sensitivity = { objectName, effect, grantedScopes: input.grantedScopes } as const;
+    assertRequestedProperties(input.params.body, sensitivity);
+    if (effect === "mutate") assertWritableProperties(input.params.body, sensitivity);
     const pages: unknown[] = [];
     let after: string | undefined;
     let status = 0;
     let correlationId: string | null = null;
     let truncated = false;
-    const exportCall = isExport(input.operation);
-    const recordCap = exportCall ? Math.min(this.maxRecords, 10) : this.maxRecords;
-    const limit = exportCall ? 1 : input.followPages && input.operation.paginated ? 5 : 1;
-    const sensitive = allowsSensitiveProperties(input.operation, input.grantedScopes);
+    const limit = input.followPages && input.operation.paginated ? 5 : 1;
     for (let page = 0; page < limit; page += 1) {
-      const query = stripSensitiveQuery({ ...(input.params.query ?? {}) }, sensitive);
+      const query = filterQuery({ ...(input.params.query ?? {}) }, sensitivity);
       if (after) query.after = after;
       const response = await this.request(input.operation, path, query, input.params.body, input.token);
       status = response.status;
@@ -71,22 +75,21 @@ export class HubSpotClient {
       pages.push(response.body);
       const next = nextCursor(response.body);
       const count = countResults(pages);
-      if (!input.followPages || !next || count >= recordCap) {
+      if (!input.followPages || !next || count >= this.maxRecords) {
         truncated = Boolean(next);
         break;
       }
       after = next;
     }
     const combined = pages.length === 1 ? pages[0] : { pages };
-    const capped = exportCall ? capExport(combined, recordCap) : { body: combined, truncated: false };
     return {
       ok: status >= 200 && status < 300,
       status,
       operationId: input.operation.id,
       method: input.operation.method,
       path,
-      body: redact(stripSensitiveValue(capped.body, sensitive)),
-      truncated: truncated || capped.truncated,
+      body: redact(filterPropertyBag(combined, sensitivity)),
+      truncated,
       correlationId,
       sourceUrl: input.operation.sourceUrl,
       pages: pages.length,
@@ -111,13 +114,14 @@ export class HubSpotClient {
       },
       body: body !== undefined && operation.method !== "GET" ? JSON.stringify(body) : undefined,
     };
-    let response = await this.fetchImpl(url, init);
+    if (url.origin !== new URL(this.baseUrl).origin) throw new PolicyError("HubSpot request host is not allowed.", "validation");
+    let response = await this.fetchOnce(url, init);
     let correlationId = response.headers.get("x-hubspot-correlation-id");
     const retryable = operation.effect === "read" && (response.status === 429 || response.status === 503);
     if (retryable) {
       const wait = retryDelay(response);
       await this.sleep(wait);
-      response = await this.fetchImpl(url, init);
+      response = await this.fetchOnce(url, init);
       correlationId = response.headers.get("x-hubspot-correlation-id") ?? correlationId;
     }
     const text = await response.text();
@@ -135,6 +139,12 @@ export class HubSpotClient {
       correlationId,
     };
   }
+
+  private async fetchOnce(url: URL, init: RequestInit): Promise<Response> {
+    const response = await this.fetchImpl(url, { ...init, redirect: "manual" });
+    if (response.status >= 300 && response.status < 400) throw new PolicyError("HubSpot redirect is not followed.", "validation");
+    return response;
+  }
 }
 
 function retryDelay(response: Response): number {
@@ -151,39 +161,26 @@ function nextCursor(body: unknown): string | undefined {
   return typeof after === "string" && after ? after : undefined;
 }
 
-const SENSITIVE_KEY = /sensitive|ssn|passport|tax_?id|social_security/i;
-
-export function allowsSensitiveProperties(operation: OperationRecord, grantedScopes: readonly string[]): boolean {
-  const names = operation.scopeGroups.flatMap((group) => group.scopes).filter((scope) => /sensitive/i.test(scope));
-  return names.length > 0 && names.some((scope) => grantedScopes.includes(scope));
-}
-
-function isExport(operation: OperationRecord): boolean {
-  return operation.path.includes("/exports") || operation.id.includes("export");
-}
-
-function stripSensitiveQuery(query: Record<string, string | number | boolean>, allow: boolean): Record<string, string | number | boolean> {
-  if (allow || typeof query.properties !== "string") return query;
-  const properties = query.properties.split(",").map((name) => name.trim()).filter((name) => name && !SENSITIVE_KEY.test(name));
-  return { ...query, properties: properties.join(",") };
-}
-
-function capExport(body: unknown, cap: number): { body: unknown; truncated: boolean } {
-  if (!body || typeof body !== "object" || Array.isArray(body)) return { body, truncated: false };
-  const results = (body as { results?: unknown }).results;
-  if (!Array.isArray(results) || results.length <= cap) return { body, truncated: false };
-  return { body: { ...(body as Record<string, unknown>), results: results.slice(0, cap) }, truncated: true };
-}
-
-function stripSensitiveValue(value: unknown, allow: boolean): unknown {
-  if (allow || value === null || typeof value !== "object") return value;
-  if (Array.isArray(value)) return value.map((item) => stripSensitiveValue(item, allow));
-  const output: Record<string, unknown> = {};
-  for (const [key, child] of Object.entries(value as Record<string, unknown>)) {
-    if (SENSITIVE_KEY.test(key)) continue;
-    output[key] = stripSensitiveValue(child, allow);
+function assertExportBounded(operation: OperationRecord, params: CallParams): void {
+  const exportCall = operation.path.includes("/exports") || operation.id.includes("export");
+  if (!exportCall) return;
+  if (operation.method === "GET" || operation.path.includes("/download")) {
+    throw new PolicyError("Unbounded export retrieval is disabled.", "validation");
   }
-  return output;
+  const raw = params.query?.limit ?? (params.body as { limit?: unknown } | undefined)?.limit;
+  const limit = Number(raw);
+  if (!Number.isInteger(limit) || limit < 1 || limit > 10) {
+    throw new PolicyError("Export creation requires an explicit limit of 1 to 10.", "validation");
+  }
+}
+
+function filterQuery(
+  query: Record<string, string | number | boolean>,
+  input: { objectName: string | null; effect: "read" | "mutate"; grantedScopes: readonly string[] },
+): Record<string, string | number | boolean> {
+  if (typeof query.properties !== "string") return query;
+  const properties = filterPropertyList(query.properties.split(",").map((name) => name.trim()).filter(Boolean), input);
+  return { ...query, properties: properties.join(",") };
 }
 
 function countResults(pages: unknown[]): number {

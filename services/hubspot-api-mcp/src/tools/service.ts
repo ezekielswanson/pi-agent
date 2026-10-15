@@ -2,7 +2,7 @@ import { audit } from "../audit/log.ts";
 import { HubSpotClient } from "../hubspot/client.ts";
 import type { HubSpotGrant } from "../hubspot/tokenStore.ts";
 import { approveProposal, consumeApproval, prepareChange } from "../policy/approval.ts";
-import { assertOperationAllowed, buildPath } from "../policy/exclusions.ts";
+import { assertOperationAllowed, buildPath, scopesSatisfied } from "../policy/exclusions.ts";
 import { PolicyError } from "../policy/errors.ts";
 import { redact } from "../policy/redact.ts";
 import type { CallParams, OperationRecord } from "../registry/types.ts";
@@ -18,15 +18,49 @@ export interface ToolContext {
   auditFile?: string;
 }
 
-export function listOperations(operations: Map<string, OperationRecord>, filter?: { domain?: string; effect?: string; query?: string }) {
+export async function capabilityReport(ctx: ToolContext, meta: { retrievedAt: string; apiVersion: string }) {
+  let grantedScopes: string[] = [];
+  let grantState = "not_connected";
+  try {
+    grantedScopes = [...(await ctx.grant()).scopes];
+    grantState = "connected";
+  } catch {
+    grantState = "not_connected";
+  }
+  const implemented = [...ctx.operations.values()].filter((operation) => operation.implemented);
+  const executable = implemented.filter((operation) => grantedScopes.length > 0 && scopesSatisfied(operation, grantedScopes));
+  return {
+    retrievedAt: meta.retrievedAt,
+    apiVersion: meta.apiVersion,
+    implementedOperations: implemented.length,
+    executableOperations: executable.length,
+    excludedOperations: [...ctx.operations.values()].filter((operation) => operation.excluded).length,
+    grantedScopes,
+    grantState,
+    runtime: "authorized_by_documented_scope_until_a_live_read_is_approved",
+    destructiveExecution: "untested_live",
+  };
+}
+
+export function listOperations(
+  operations: Map<string, OperationRecord>,
+  filter?: { domain?: string; effect?: string; query?: string; cursor?: number; limit?: number },
+) {
   const needle = filter?.query?.toLowerCase();
-  return [...operations.values()]
+  const matches = [...operations.values()]
     .filter((operation) => operation.implemented)
     .filter((operation) => !filter?.domain || operation.domain === filter.domain)
     .filter((operation) => !filter?.effect || operation.effect === filter.effect)
-    .filter((operation) => !needle || `${operation.id} ${operation.title} ${operation.path}`.toLowerCase().includes(needle))
-    .slice(0, 50)
-    .map((operation) => ({
+    .filter((operation) => !needle || `${operation.id} ${operation.title} ${operation.path}`.toLowerCase().includes(needle));
+  const start = Math.max(0, filter?.cursor ?? 0);
+  const limit = Math.min(100, Math.max(1, filter?.limit ?? 50));
+  const page = matches.slice(start, start + limit);
+  const next = start + page.length;
+  return {
+    total: matches.length,
+    truncated: next < matches.length,
+    nextCursor: next < matches.length ? next : null,
+    operations: page.map((operation) => ({
       id: operation.id,
       title: operation.title,
       method: operation.method,
@@ -36,7 +70,8 @@ export function listOperations(operations: Map<string, OperationRecord>, filter?
       tool: operation.tool,
       scopes: operation.scopeGroups,
       sourceUrl: operation.sourceUrl,
-    }));
+    })),
+  };
 }
 
 export async function readOperation(ctx: ToolContext, operationId: string, params: CallParams, followPages = false) {

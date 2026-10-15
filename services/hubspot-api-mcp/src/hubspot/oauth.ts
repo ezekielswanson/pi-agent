@@ -1,3 +1,5 @@
+import { randomBytes } from "node:crypto";
+import { PolicyError } from "../policy/errors.ts";
 import type { HubSpotGrant, TokenStore } from "./tokenStore.ts";
 
 export interface HubSpotOAuthConfig {
@@ -10,6 +12,51 @@ export interface HubSpotOAuthConfig {
 }
 
 const refreshLocks = new Map<string, Promise<HubSpotGrant>>();
+
+interface InstallState {
+  subject: string;
+  portalId: string;
+  redirectUri: string;
+  expiresAt: number;
+  used: boolean;
+}
+
+const installStates = new Map<string, InstallState>();
+
+export function beginHubSpotInstall(input: { subject: string; portalId: string; redirectUri: string; ttlMs?: number }): string {
+  const state = randomBytes(32).toString("base64url");
+  installStates.set(state, {
+    subject: input.subject,
+    portalId: input.portalId,
+    redirectUri: input.redirectUri,
+    expiresAt: Date.now() + (input.ttlMs ?? 10 * 60 * 1000),
+    used: false,
+  });
+  return state;
+}
+
+export function consumeHubSpotInstall(
+  state: string,
+  expected: { portalId: string; redirectUri: string; subject: string },
+): InstallState {
+  const record = installStates.get(state);
+  if (!record) throw new PolicyError("HubSpot callback state is missing or forged.", "auth");
+  if (record.used) throw new PolicyError("HubSpot callback state was already used.", "auth");
+  if (record.expiresAt <= Date.now()) {
+    record.used = true;
+    throw new PolicyError("HubSpot callback state expired.", "auth");
+  }
+  record.used = true;
+  if (record.portalId !== expected.portalId || record.redirectUri !== expected.redirectUri) {
+    throw new PolicyError("HubSpot callback state does not match this installation.", "auth");
+  }
+  if (record.subject !== expected.subject) throw new PolicyError("HubSpot callback state does not match this user.", "auth");
+  return record;
+}
+
+export function resetInstallStates(): void {
+  installStates.clear();
+}
 
 export function hubSpotAuthorizeUrl(config: Pick<HubSpotOAuthConfig, "clientId" | "redirectUri">, scopes: { required: string[]; optional: string[] }, state: string): string {
   const url = new URL("https://app.hubspot.com/oauth/authorize");

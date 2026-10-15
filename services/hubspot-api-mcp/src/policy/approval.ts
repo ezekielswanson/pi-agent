@@ -1,5 +1,6 @@
 import { createHmac, randomUUID, timingSafeEqual } from "node:crypto";
 import { ELEVATED, type CallParams, type OperationRecord } from "../registry/types.ts";
+import { redact } from "./redact.ts";
 import { PolicyError } from "./errors.ts";
 
 export interface Proposal {
@@ -63,7 +64,12 @@ export function prepareChange(input: {
     pathParams: input.params.pathParams ?? {},
     query: input.params.query ?? {},
     body: input.params.body ?? null,
-    bodyHash: payloadHash(input.params.body ?? null),
+    bodyHash: payloadHash({
+      method: input.operation.method,
+      path: input.resolvedPath,
+      query: input.params.query ?? {},
+      body: input.params.body ?? null,
+    }),
     destructive: input.operation.destructive,
     elevated: ELEVATED.has(input.operation.destructive),
     expiresAt: Date.now() + (input.ttlMs ?? 10 * 60 * 1000),
@@ -80,6 +86,7 @@ export function approveProposal(input: { proposalId: string; actor: string; port
     throw new PolicyError("Approval actor or portal does not match the proposal.", "approval");
   }
   if (proposal.expiresAt <= Date.now()) throw new PolicyError("Proposal expired.", "approval");
+  if (proposal.approved || proposal.used) throw new PolicyError("Proposal was already reviewed.", "approval");
   proposal.approved = true;
   const token = sign(proposal, input.secret);
   return { proposal, token };
@@ -105,11 +112,23 @@ export function consumeApproval(input: {
   if (proposal.operationId !== input.operation.id || proposal.method !== input.operation.method || proposal.path !== input.resolvedPath) {
     throw new PolicyError("Approval does not match this operation.", "approval");
   }
-  if (proposal.bodyHash !== payloadHash(input.params.body ?? null)) {
+  const requestHash = payloadHash({
+    method: input.operation.method,
+    path: input.resolvedPath,
+    query: input.params.query ?? {},
+    body: input.params.body ?? null,
+  });
+  if (proposal.bodyHash !== requestHash) {
     throw new PolicyError("Approval does not match this payload.", "approval");
   }
   proposal.used = true;
   return proposal;
+}
+
+export function proposalsForDisplay(id: string): Proposal | null {
+  const proposal = proposals.get(id);
+  if (!proposal) return null;
+  return { ...proposal, body: redact(proposal.body) };
 }
 
 export function resetApprovals(): void {
