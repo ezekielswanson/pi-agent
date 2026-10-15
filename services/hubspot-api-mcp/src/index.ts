@@ -1,4 +1,5 @@
 import { createServer } from "node:http";
+import { actionPolicyFromEnv } from "./policy/actionPolicy.ts";
 import { assertProductionSecrets } from "./boot.ts";
 import type { UserCredential } from "./auth/provider.ts";
 import { createApp, type AppConfig } from "./server.ts";
@@ -17,6 +18,10 @@ const config: AppConfig = {
   tokenFile: process.env.HUBSPOT_TOKEN_FILE,
   revocationFile: process.env.MCP_REVOCATION_FILE,
   users: loadUsers(),
+  actionPolicy: actionPolicyFromEnv({
+    action: process.env.HUBSPOT_ACTION_POLICY,
+    exports: process.env.HUBSPOT_EXPORT_CREATION,
+  }),
   hubspot: {
     clientId: process.env.HUBSPOT_API_CLIENT_ID ?? "",
     clientSecret: process.env.HUBSPOT_API_CLIENT_SECRET ?? "",

@@ -11,7 +11,7 @@ This service is not Breeze and it is not the hosted connector. It exposes allowl
 | `get_user_details` | `hubspot_capabilities` reports the stored grant after OAuth. It does not return HubSpot's per-object permission payload. | HubSpot access-token inspection | Partial. Live result NOT TESTED. |
 | `get_organization_details` | Account-info reads behind `hubspot_account-info_read`. | Account-info scopes on the operation | Partial. Live NOT TESTED. |
 | `discover_hubspot_schema` | CRM schema reads. | Schema scopes on the operation | Partial. Live NOT TESTED. |
-| `search_crm_objects` | CRM search operation ids. Search filters and property lists fail closed unless the object-specific sensitivity grant exists. | Object read scope, plus sensitive or highly sensitive scope when requested | Implemented in the register. Live NOT TESTED. Behavior differs: no five-group cap is enforced in the tool layer. |
+| `search_crm_objects` | CRM search operation ids. Property names are passed through when the grant allows the call. | Object read scope on the operation | Implemented in the register. Live NOT TESTED. Behavior differs: no five-group cap is enforced in the tool layer. |
 | `get_crm_objects` | CRM batch and single-record reads. | Object read scope | Implemented. Live NOT TESTED. |
 | `manage_crm_objects` | Prepare then execute. Archive uses the write scope where the 2026-09 page says so. | Object write scope | Different confirmation: a login-cookie approval page, not an in-tool confirm. Live NOT TESTED. |
 | `manage_segment` | List operation ids where the reference documents them. | List scopes | Partial. Segment membership writes are not a dedicated guided tool. |
@@ -41,8 +41,8 @@ This service is not Breeze and it is not the hosted connector. It exposes allowl
 | `tool_guidance` | `hubspot_list_operations` returns paginated operation metadata and source URLs. | None beyond MCP login | Different content. It does not return HubSpot's hosted guidance text. |
 | `submit_feedback` | None. |  | Gap. Feedback is sent to HubSpot by their MCP server. |
 
-Hosted write tools confirm inside the MCP session. This service rejects an MCP bearer that posts to the approval URL. A separate login cookie has to approve the displayed method, path, query, and body.
+Hosted write tools confirm inside the MCP session. This service rejects an MCP bearer that posts to the approval URL. A separate login cookie has to approve the displayed method, path, query, and body. The default action policy is read-only, and delete, archive, and purge stay denied for this release even after that approval flow is enabled for other writes.
 
 Archive and delete stay available only when a 2026-09 operation is implemented and not excluded. `files.delete`, `commerce.payment_links.delete`, and `business_units_view.read` stay omitted. File deletion and payment-link deletion are rejected in the tool layer.
 
-Sensitive Data can block activities and conversations on the hosted MCP while the standard APIs still allow them. This service can return those API records when the grant allows, with sensitive and highly sensitive properties removed unless the matching object scope is granted. That is a behavioral difference, not extra permission.
+Sensitive Data can block activities and conversations on the hosted MCP while the standard APIs still allow them. This service returns the properties the grant and endpoint allow, including custom properties. Broad read access can include sensitive values. The capability report shows the stored grant so it can be reviewed. That is a behavioral difference, not an extra permission.

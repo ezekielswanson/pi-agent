@@ -12,6 +12,7 @@ import { exchangeHubSpotCode, getValidGrant, resetRefreshLocks } from "../src/hu
 import { TokenStore } from "../src/hubspot/tokenStore.ts";
 import { readFileSync } from "node:fs";
 import { loadOperations } from "../src/registry/load.ts";
+import { releaseActionPolicy } from "../src/policy/actionPolicy.ts";
 import { executeOperation, prepareOperation } from "../src/tools/service.ts";
 
 const read = loadOperations().find((operation) => operation.id === "get-crm-objects-2026-09-contacts-contactid");
@@ -130,47 +131,61 @@ test("mcp tokens reject a client-supplied subject, the wrong audience, and a bad
   await assert.rejects(() => otherIssuer.verifyAccessToken(access), /Issuer/);
 });
 
-test("sensitive properties are omitted and exports are capped", async () => {
+test("custom properties pass through and export retrieval is not capped", async () => {
   let requested = "";
   const client = new HubSpotClient({
     fetchImpl: async (input) => {
       requested = String(input);
-      if (requested.includes("/exports/")) {
-        return new Response(JSON.stringify({ results: Array.from({ length: 12 }, (_, index) => index) }), { status: 200 });
-      }
-      return new Response(JSON.stringify({ properties: { email: "a@example.com", ssn: "123", firstname: "Ada" } }), { status: 200 });
+      return new Response(JSON.stringify({ properties: { email: "a@example.com", custom_apartment_code: "A1", firstname: "Ada" } }), { status: 200 });
     },
   });
   const readResult = await client.call({
     operation: read,
-    params: { pathParams: { contactId: "1" }, query: { properties: "email,ssn,firstname" } },
+    params: { pathParams: { contactId: "1" }, query: { properties: "email,custom_apartment_code,firstname" } },
     token: "hubspot-token",
     grantedScopes: read.scopeGroups.flatMap((group) => group.scopes),
   });
   const properties = (readResult.body as { properties: Record<string, string> }).properties;
-  assert.equal(properties.ssn, undefined);
+  assert.equal(properties.custom_apartment_code, "A1");
   assert.equal(properties.email, "a@example.com");
-  assert.equal(requested.includes("ssn"), false);
+  assert.equal(requested.includes("custom_apartment_code"), true);
   const granted = read.scopeGroups.flatMap((group) => group.scopes);
   let exportCalls = 0;
   const exportClient = new HubSpotClient({
     fetchImpl: async () => {
       exportCalls += 1;
-      return new Response(JSON.stringify({ results: Array.from({ length: 12 }, (_, index) => index) }), { status: 200 });
+      return new Response(
+        JSON.stringify({
+          results: Array.from({ length: 12 }, (_, index) => index),
+          downloadUrl: "https://files.example/export.csv",
+          statusUrl: "https://api.hubapi.com/crm/exports/2026-09/export/1",
+        }),
+        { status: 200 },
+      );
     },
   });
-  const exportOperation = { ...read, id: "get-crm-exports-2026-09", path: "/crm/v3/exports/export" };
+  const exportOperation = { ...read, id: "get-crm-exports-2026-09-export-exportid", path: "/crm/exports/2026-09/export/{exportId}", effect: "read" as const };
+  const exported = await exportClient.call({
+    operation: exportOperation,
+    params: { pathParams: { exportId: "1" } },
+    token: "hubspot-token",
+    grantedScopes: granted,
+  });
+  assert.equal(exportCalls, 1);
+  const body = exported.body as { results: number[]; downloadUrl: string; statusUrl: string };
+  assert.equal(body.results.length, 12);
+  assert.equal(body.downloadUrl, "[off-host export link withheld]");
+  assert.equal(body.statusUrl, "https://api.hubapi.com/crm/exports/2026-09/export/1");
   await assert.rejects(
-    () => exportClient.call({ operation: exportOperation, params: {}, token: "hubspot-token", grantedScopes: granted, followPages: true }),
-    /Unbounded export retrieval is disabled/,
+    () =>
+      client.call({
+        operation: read,
+        params: { pathParams: { contactId: "1" } },
+        token: "hubspot-token",
+        grantedScopes: ["oauth"],
+      }),
+    /scopes do not satisfy/,
   );
-  assert.equal(exportCalls, 0);
-  const createExport = { ...exportOperation, method: "POST" as const, id: "post-crm-exports-2026-09", path: "/crm/v3/exports" };
-  await assert.rejects(
-    () => exportClient.call({ operation: createExport, params: { body: {} }, token: "hubspot-token", grantedScopes: granted }),
-    /limit of 1 to 10/,
-  );
-  assert.equal(exportCalls, 0);
 });
 
 test("production boot refuses weak secrets and a non-HTTPS issuer", () => {
@@ -271,13 +286,14 @@ test("token files do not store plaintext HubSpot tokens", async () => {
 
 test("prepare does not call HubSpot and execute requires approval", async () => {
   let calls = 0;
-  const mutate = loadOperations().find((operation) => operation.id === "delete-crm-objects-2026-09-contacts-contactid");
-  assert.ok(mutate);
+  const mutate = loadOperations().find((operation) => operation.id === "patch-crm-objects-2026-09-contacts-contactid");
+  const archive = loadOperations().find((operation) => operation.id === "delete-crm-objects-2026-09-contacts-contactid");
+  assert.ok(mutate && archive);
   const ctx = {
     actor: "ada",
     clientId: "pi",
     portalId: "5627913",
-    operations: new Map([[mutate.id, mutate]]),
+    operations: new Map([[mutate.id, mutate], [archive.id, archive]]),
     client: new HubSpotClient({
       fetchImpl: async () => {
         calls += 1;
@@ -293,7 +309,10 @@ test("prepare does not call HubSpot and execute requires approval", async () => 
       userId: "1",
     }),
     approvalSecret: "approval",
+    actionPolicy: releaseActionPolicy({ writes: "approval_required" }),
   };
+  await assert.rejects(() => prepareOperation(ctx, archive.id, { pathParams: { contactId: "42" } }), /denied for this release/);
+  assert.equal(calls, 0);
   const proposal = await prepareOperation(ctx, mutate.id, { pathParams: { contactId: "42" } });
   assert.equal(calls, 0);
   await assert.rejects(() => executeOperation(ctx, mutate.id, { pathParams: { contactId: "42" } }, "approved-true-is-not-approval"), /approval/i);

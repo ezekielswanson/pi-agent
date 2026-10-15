@@ -10,6 +10,8 @@ const params = {
   query: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).optional(),
 };
 
+export const changeArguments = z.object({ ...params, body: z.unknown().optional() }).strict();
+
 export function registerHubSpotTools(server: McpServer, ctx: ToolContext, meta: { retrievedAt: string; apiVersion: string }): void {
   const readTools = new Map<string, OperationRecord[]>();
   for (const operation of ctx.operations.values()) {
@@ -40,10 +42,10 @@ export function registerHubSpotTools(server: McpServer, ctx: ToolContext, meta: 
         query: z.string().max(200).optional(),
         cursor: z.number().int().nonnegative().optional(),
         limit: z.number().int().positive().max(100).optional(),
-      }),
+      }).strict(),
       annotations: { readOnlyHint: true, destructiveHint: false },
     },
-    async (args) => guard(async () => json(listOperations(ctx.operations, args))),
+    async (args) => guard(async () => json(listOperations(ctx.operations, { ...args, policy: ctx.actionPolicy }))),
   );
 
   for (const [name, operations] of readTools) {
@@ -52,7 +54,7 @@ export function registerHubSpotTools(server: McpServer, ctx: ToolContext, meta: 
       {
         title: `HubSpot ${operations[0]?.domain ?? "api"} reads`,
         description: `Read an allowlisted ${operations[0]?.domain ?? "api"} operation. ${operations.length} operations. Use hubspot_list_operations to choose an operationId.`,
-        inputSchema: z.object({ ...params, followPages: z.boolean().optional() }),
+        inputSchema: z.object({ ...params, followPages: z.boolean().optional() }).strict(),
         annotations: { readOnlyHint: true, destructiveHint: false },
       },
       async (args) => guard(async () => {
@@ -68,7 +70,7 @@ export function registerHubSpotTools(server: McpServer, ctx: ToolContext, meta: 
     {
       title: "Prepare a HubSpot change",
       description: "Resolve an allowlisted mutation and return a proposal. This does not change HubSpot data.",
-      inputSchema: z.object({ ...params, body: z.unknown().optional() }),
+      inputSchema: changeArguments,
       annotations: { readOnlyHint: false, destructiveHint: true },
     },
     async (args) => guard(async () => json(await prepareOperation(ctx, args.operationId, args))),
@@ -79,7 +81,7 @@ export function registerHubSpotTools(server: McpServer, ctx: ToolContext, meta: 
     {
       title: "Execute an approved HubSpot change",
       description: "Execute a proposal only with the approval token from the human approval endpoint. approved=true is not accepted.",
-      inputSchema: z.object({ ...params, body: z.unknown().optional(), approvalToken: z.string().min(10) }),
+      inputSchema: z.object({ ...params, body: z.unknown().optional(), approvalToken: z.string().min(10) }).strict(),
       annotations: { readOnlyHint: false, destructiveHint: true },
     },
     async (args) => guard(async () => json(await executeOperation(ctx, args.operationId, args, args.approvalToken))),

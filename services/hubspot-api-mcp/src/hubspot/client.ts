@@ -1,7 +1,6 @@
 import { assertBatchBound, assertOperationAllowed, buildPath, scopesSatisfied } from "../policy/exclusions.ts";
 import { PolicyError } from "../policy/errors.ts";
 import { redact } from "../policy/redact.ts";
-import { assertRequestedProperties, assertWritableProperties, filterPropertyBag, filterPropertyList, objectNameFromPath } from "../policy/sensitivity.ts";
 import type { CallParams, OperationRecord } from "../registry/types.ts";
 
 export interface HubSpotCallResult {
@@ -53,13 +52,7 @@ export class HubSpotClient {
       throw new PolicyError("Granted HubSpot scopes do not satisfy this operation.", "scope");
     }
     assertBatchBound(input.params.body, input.operation.batch);
-    assertExportBounded(input.operation, input.params);
     const path = buildPath(input.operation.path, input.params.pathParams);
-    const objectName = objectNameFromPath(path);
-    const effect = input.operation.effect === "mutate" ? "mutate" : "read";
-    const sensitivity = { objectName, effect, grantedScopes: input.grantedScopes } as const;
-    assertRequestedProperties(input.params.body, sensitivity);
-    if (effect === "mutate") assertWritableProperties(input.params.body, sensitivity);
     const pages: unknown[] = [];
     let after: string | undefined;
     let status = 0;
@@ -67,7 +60,7 @@ export class HubSpotClient {
     let truncated = false;
     const limit = input.followPages && input.operation.paginated ? 5 : 1;
     for (let page = 0; page < limit; page += 1) {
-      const query = filterQuery({ ...(input.params.query ?? {}) }, sensitivity);
+      const query = { ...(input.params.query ?? {}) };
       if (after) query.after = after;
       const response = await this.request(input.operation, path, query, input.params.body, input.token);
       status = response.status;
@@ -88,7 +81,7 @@ export class HubSpotClient {
       operationId: input.operation.id,
       method: input.operation.method,
       path,
-      body: redact(filterPropertyBag(combined, sensitivity)),
+      body: redact(exportBody(input.operation, combined, this.baseUrl)),
       truncated,
       correlationId,
       sourceUrl: input.operation.sourceUrl,
@@ -161,26 +154,27 @@ function nextCursor(body: unknown): string | undefined {
   return typeof after === "string" && after ? after : undefined;
 }
 
-function assertExportBounded(operation: OperationRecord, params: CallParams): void {
-  const exportCall = operation.path.includes("/exports") || operation.id.includes("export");
-  if (!exportCall) return;
-  if (operation.method === "GET" || operation.path.includes("/download")) {
-    throw new PolicyError("Unbounded export retrieval is disabled.", "validation");
-  }
-  const raw = params.query?.limit ?? (params.body as { limit?: unknown } | undefined)?.limit;
-  const limit = Number(raw);
-  if (!Number.isInteger(limit) || limit < 1 || limit > 10) {
-    throw new PolicyError("Export creation requires an explicit limit of 1 to 10.", "validation");
-  }
+function exportBody(operation: OperationRecord, body: unknown, baseUrl: string): unknown {
+  const exportCall = operation.path.includes("/export") || operation.id.includes("export");
+  if (!exportCall) return body;
+  return withholdOffHostLinks(body, new URL(baseUrl).origin);
 }
 
-function filterQuery(
-  query: Record<string, string | number | boolean>,
-  input: { objectName: string | null; effect: "read" | "mutate"; grantedScopes: readonly string[] },
-): Record<string, string | number | boolean> {
-  if (typeof query.properties !== "string") return query;
-  const properties = filterPropertyList(query.properties.split(",").map((name) => name.trim()).filter(Boolean), input);
-  return { ...query, properties: properties.join(",") };
+function withholdOffHostLinks(value: unknown, allowedOrigin: string): unknown {
+  if (typeof value === "string" && /^https?:\/\//i.test(value)) {
+    try {
+      return new URL(value).origin === allowedOrigin ? value : "[off-host export link withheld]";
+    } catch {
+      return "[off-host export link withheld]";
+    }
+  }
+  if (Array.isArray(value)) return value.map((item) => withholdOffHostLinks(item, allowedOrigin));
+  if (value && typeof value === "object") {
+    const output: Record<string, unknown> = {};
+    for (const [key, child] of Object.entries(value)) output[key] = withholdOffHostLinks(child, allowedOrigin);
+    return output;
+  }
+  return value;
 }
 
 function countResults(pages: unknown[]): number {

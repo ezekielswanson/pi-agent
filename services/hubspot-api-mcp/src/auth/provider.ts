@@ -129,6 +129,7 @@ export class McpAuth {
   }
 
   subjectFromSession(sessionToken: string): string {
+    if (this.revocations.has(sessionToken)) throw new PolicyError("Login session rejected.", "auth");
     return readSession(sessionToken, this.config.secret).sub;
   }
 

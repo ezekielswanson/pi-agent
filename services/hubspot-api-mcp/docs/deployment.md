@@ -17,7 +17,9 @@ Secret names, never values:
 
 `HUBSPOT_TOKEN_FILE` holds AES-256-GCM HubSpot grants. `MCP_REVOCATION_FILE` holds SHA-256 hashes of revoked MCP access tokens, not the tokens. Both files have to survive restarts on one machine.
 
-These stay in process memory and are lost on restart or invisible to a second instance: MCP authorization codes, refresh tokens, login sessions, HubSpot install states, and change proposals. Restart fails closed for those. Horizontal scale needs a shared store before more than one process serves traffic.
+One process is enough for the first launch. These stay in process memory and are lost on restart: MCP authorization codes, refresh tokens, login sessions, HubSpot install states, and change proposals. Clients must sign in again after a restart. Revoked access tokens stay revoked because their hashes are in `MCP_REVOCATION_FILE`. HubSpot grants stay encrypted in `HUBSPOT_TOKEN_FILE` and remain bound to the user and portal that created them. A restart does not revive an approval or move one user's installation to another user. This is a single-instance tradeoff, not horizontal scaling.
+
+The default action policy is read-only. `HUBSPOT_ACTION_POLICY=writes-with-approval` turns on human approval for non-delete changes. `HUBSPOT_EXPORT_CREATION=approval` does the same for export creation. Delete, archive, and purge stay denied. See [Action policy](action-policy.md).
 
 The approval page and the HubSpot callback require the login cookie. An MCP access token cannot approve a change. Login is a local username, scrypt password hash, and allowlist. It is not a maintained identity provider.
 
@@ -33,6 +35,6 @@ Launch is not approved. Before a live app, a public deploy, a merge, or a live r
 - Identity: keep the local scrypt login for a private single-user deploy, or name an existing identity provider.
 - Allowed users and portal `5627913`.
 - Deploy actions: one process, secret store, grant file, revocation file, HTTPS in front.
-- Live checks: health and metadata, one read-only grant inspection, then ChatGPT, Claude, and Pi separately. No send, publish, merge, or delete against Apartment Life data.
+- Live checks, after the host is approved: health and metadata, one read-only grant inspection, then a ChatGPT custom app against the new URL. Claude and Pi stay separate and untested until that ChatGPT read-only pass is done. No send, publish, merge, or delete against Apartment Life data.
 
 ChatGPT, Claude, and Pi connection status: not started.

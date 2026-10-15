@@ -11,8 +11,10 @@ import { HubSpotClient } from "../src/hubspot/client.ts";
 import { beginHubSpotInstall, consumeHubSpotInstall, resetInstallStates } from "../src/hubspot/oauth.ts";
 import { loadOperations, operationMap } from "../src/registry/load.ts";
 import { createApp } from "../src/server.ts";
-import { resetApprovals } from "../src/policy/approval.ts";
-import { capabilityReport, executeOperation, listOperations, prepareOperation } from "../src/tools/service.ts";
+import { approveProposal, resetApprovals } from "../src/policy/approval.ts";
+import { actionPolicyFromEnv, releaseActionPolicy } from "../src/policy/actionPolicy.ts";
+import { changeArguments } from "../src/tools/register.ts";
+import { capabilityReport, executeOperation, listOperations, prepareOperation, readOperation } from "../src/tools/service.ts";
 
 const password = "correct-horse-battery";
 const users = [
@@ -130,7 +132,7 @@ test("hubspot callback state cannot be replayed or finished by another user", as
 
 test("an MCP bearer token cannot approve its own proposal", async () => {
   resetApprovals();
-  const mutate = loadOperations().find((operation) => operation.id === "delete-crm-objects-2026-09-contacts-contactid");
+  const mutate = loadOperations().find((operation) => operation.id === "patch-crm-objects-2026-09-contacts-contactid");
   assert.ok(mutate);
   const app = await appWith();
   const prepared = await prepareOperation(
@@ -144,6 +146,7 @@ test("an MCP bearer token cannot approve its own proposal", async () => {
         throw new Error("no grant");
       },
       approvalSecret: "approval-secret",
+      actionPolicy: releaseActionPolicy({ writes: "approval_required" }),
     },
     mutate.id,
     { pathParams: { contactId: "42" } },
@@ -191,6 +194,7 @@ test("an MCP bearer token cannot approve its own proposal", async () => {
         userId: "1",
       }),
       approvalSecret: "approval-secret",
+      actionPolicy: releaseActionPolicy({ writes: "approval_required" }),
     },
     mutate.id,
     { pathParams: { contactId: "42" } },
@@ -210,6 +214,7 @@ test("an MCP bearer token cannot approve its own proposal", async () => {
             throw new Error("should not refresh");
           },
           approvalSecret: "approval-secret",
+          actionPolicy: releaseActionPolicy({ writes: "approval_required" }),
         },
         mutate.id,
         { pathParams: { contactId: "42" } },
@@ -219,82 +224,55 @@ test("an MCP bearer token cannot approve its own proposal", async () => {
   );
 });
 
-test("sensitive grants are object-specific and unknown properties fail closed", async () => {
+test("read-only policy allows custom properties and denies writes, exports, and deletion", async () => {
   const read = loadOperations().find((operation) => operation.id === "get-crm-objects-2026-09-contacts-contactid");
   const update = loadOperations().find((operation) => operation.id === "patch-crm-objects-2026-09-contacts-contactid");
-  const search = loadOperations().find((operation) => operation.id === "post-crm-objects-2026-09-contacts-search");
-  assert.ok(read && update && search);
+  const archive = loadOperations().find((operation) => operation.id === "delete-crm-objects-2026-09-contacts-contactid");
+  const createExport = loadOperations().find((operation) => operation.id === "post-crm-exports-2026-09-export-async");
+  assert.ok(read && update && archive && createExport);
   let calls = 0;
-  const client = new HubSpotClient({
-    fetchImpl: async (input) => {
-      calls += 1;
-      return new Response(JSON.stringify({ properties: { email: "a@example.com", hs_ssn: "999", secret_note: "no" } }), {
-        status: 200,
-        headers: { "x-request": String(input) },
-      });
-    },
-  });
-  const base = read.scopeGroups.flatMap((group) => group.scopes);
-  const hidden = await client.call({
-    operation: read,
-    params: { pathParams: { contactId: "1" }, query: { properties: "email,hs_ssn,secret_note" } },
-    token: "hubspot-token",
-    grantedScopes: [...base, "crm.objects.contacts.sensitive.read"],
-  });
-  const hiddenProperties = (hidden.body as { properties: Record<string, string> }).properties;
-  assert.equal(hiddenProperties.email, "a@example.com");
-  assert.equal(hiddenProperties.hs_ssn, undefined);
-  assert.equal(hiddenProperties.secret_note, undefined);
-  const shown = await client.call({
-    operation: read,
-    params: { pathParams: { contactId: "1" }, query: { properties: "hs_ssn" } },
-    token: "hubspot-token",
-    grantedScopes: [...base, "crm.objects.contacts.highly_sensitive.read"],
-  });
-  assert.equal((shown.body as { properties: Record<string, string> }).properties.hs_ssn, "999");
-  const company = {
-    ...read,
-    id: "company-read",
-    path: "/crm/objects/2026-09/companies/{companyId}",
-    scopeGroups: [{ mode: "any" as const, scopes: ["crm.objects.companies.read"] }],
+  const ctx = {
+    actor: "ada",
+    clientId: "pi",
+    portalId: "5627913",
+    operations: new Map([
+      [read.id, read],
+      [update.id, update],
+      [archive.id, archive],
+      [createExport.id, createExport],
+    ]),
+    client: new HubSpotClient({
+      fetchImpl: async (input) => {
+        calls += 1;
+        assert.equal(String(input).includes("custom_apartment_code"), true);
+        return new Response(JSON.stringify({ properties: { custom_apartment_code: "B2", access_token: "nope" } }), { status: 200 });
+      },
+    }),
+    grant: async () => ({
+      portalId: "5627913",
+      accessToken: "token",
+      refreshToken: "refresh",
+      expiresAt: Date.now() + 60_000,
+      scopes: read.scopeGroups.flatMap((group) => group.scopes),
+      userId: "1",
+    }),
+    approvalSecret: "approval-secret",
+    actionPolicy: releaseActionPolicy(),
   };
-  let requested = "";
-  const companyClient = new HubSpotClient({
-    fetchImpl: async (input) => {
-      requested = String(input);
-      return new Response(JSON.stringify({ properties: { ssn: "1", name: "North" } }), { status: 200 });
-    },
-  });
-  const companyResult = await companyClient.call({
-    operation: company,
-    params: { pathParams: { companyId: "9" }, query: { properties: "ssn,name" } },
-    token: "hubspot-token",
-    grantedScopes: ["crm.objects.companies.read", "crm.objects.contacts.sensitive.read"],
-  });
-  assert.equal((companyResult.body as { properties: Record<string, string> }).properties.ssn, undefined);
-  assert.equal(requested.includes("ssn"), false);
-  const before = calls;
-  await assert.rejects(
-    () =>
-      client.call({
-        operation: search,
-        params: { body: { filterGroups: [{ filters: [{ propertyName: "ssn", operator: "EQ", value: "1" }] }] } },
-        token: "hubspot-token",
-        grantedScopes: search.scopeGroups.flatMap((group) => group.scopes),
-      }),
-    /not granted/,
-  );
-  assert.equal(calls, before);
-  await assert.rejects(
-    () =>
-      client.call({
-        operation: update,
-        params: { pathParams: { contactId: "1" }, body: { properties: { ssn: "1" } } },
-        token: "hubspot-token",
-        grantedScopes: update.scopeGroups.flatMap((group) => group.scopes),
-      }),
-    /not granted/,
-  );
+  const result = await readOperation(ctx, read.id, { pathParams: { contactId: "1" }, query: { properties: "custom_apartment_code" } });
+  assert.equal(calls, 1);
+  const properties = (result as { body: { properties: Record<string, string> } }).body.properties;
+  assert.equal(properties.custom_apartment_code, "B2");
+  assert.equal(properties.access_token, "[redacted]");
+  await assert.rejects(() => prepareOperation(ctx, update.id, { pathParams: { contactId: "1" }, body: { properties: { custom_apartment_code: "B2" } } }), /Writes are denied/);
+  await assert.rejects(() => prepareOperation(ctx, archive.id, { pathParams: { contactId: "1" } }), /denied for this release/);
+  await assert.rejects(() => prepareOperation(ctx, createExport.id, { body: { exportType: "VIEW" } }), /Export creation is not allowed/);
+  assert.equal(calls, 1);
+  const writing = { ...ctx, actionPolicy: releaseActionPolicy({ writes: "approval_required", exportCreation: "approval_required" }) };
+  await assert.rejects(() => prepareOperation(writing, archive.id, { pathParams: { contactId: "1" } }), /denied for this release/);
+  const proposal = await prepareOperation(writing, update.id, { pathParams: { contactId: "1" }, body: { properties: { custom_apartment_code: "B2" } } });
+  assert.equal(typeof (proposal as { proposalId: string }).proposalId, "string");
+  assert.equal(calls, 1);
 });
 
 test("discovery pages report the total and capabilities follow the live grant", async () => {
@@ -318,6 +296,7 @@ test("discovery pages report the total and capabilities follow the live grant", 
       throw new Error("not connected");
     },
     approvalSecret: "approval-secret",
+    actionPolicy: releaseActionPolicy(),
   };
   const disconnected = await capabilityReport(ctx, { retrievedAt: "2026-10-15", apiVersion: "2026-09" });
   assert.equal(disconnected.grantState, "not_connected");
@@ -338,6 +317,8 @@ test("discovery pages report the total and capabilities follow the live grant", 
   );
   assert.equal(connected.grantState, "connected");
   assert.equal(connected.executableOperations, 1);
+  assert.equal(connected.actionPolicy.deletion, "deny");
+  assert.equal(connected.actionPolicy.writes, "deny");
   assert.deepEqual(connected.grantedScopes, read.scopeGroups.flatMap((group) => group.scopes));
 });
 
@@ -438,4 +419,104 @@ test("hubspot redirects to another host are not followed", async () => {
     /redirect is not followed/,
   );
   assert.equal(calls, 1);
+});
+
+test("https login requires a matching origin, and sign-out revokes the session", async () => {
+  const app = await createApp({
+    issuer: "https://mcp.example",
+    resource: "https://mcp.example/mcp",
+    authSecret: "auth-secret",
+    approvalSecret: "approval-secret",
+    portalId: "5627913",
+    allowedUsers: ["ada"],
+    users,
+    clients: [{ clientId: "pi", redirectUris: ["http://127.0.0.1:8788/callback"], publicClient: true }],
+    tokenKey: randomBytes(32).toString("base64"),
+    hubspot: { clientId: "hubspot-app", clientSecret: "not-used", redirectUri: "https://mcp.example/hubspot/oauth/callback" },
+  });
+  const body = new URLSearchParams({ username: "ada", password, request: "unused" });
+  const missing = await app.handle(new Request("https://mcp.example/login", { method: "POST", body }));
+  assert.equal(missing.status, 403);
+  const foreign = await app.handle(
+    new Request("https://mcp.example/login", { method: "POST", headers: { origin: "https://evil.example" }, body }),
+  );
+  assert.equal(foreign.status, 403);
+  const login = await app.handle(
+    new Request("https://mcp.example/login", { method: "POST", headers: { origin: "https://mcp.example" }, body }),
+  );
+  assert.equal(login.status, 200);
+  assert.match(login.headers.get("set-cookie") ?? "", /Secure/);
+  assert.match(login.headers.get("set-cookie") ?? "", /HttpOnly/);
+  const cookie = login.headers.get("set-cookie") ?? "";
+  const goodbye = await app.handle(
+    new Request("https://mcp.example/logout", { method: "POST", headers: { origin: "https://mcp.example", cookie } }),
+  );
+  assert.equal(goodbye.status, 204);
+  const after = await app.handle(new Request("https://mcp.example/hubspot/oauth/start", { headers: { cookie } }));
+  assert.equal(after.status, 401);
+});
+
+test("restart drops approvals and keeps revocation and portal isolation", async () => {
+  resetApprovals();
+  const update = loadOperations().find((operation) => operation.id === "patch-crm-objects-2026-09-contacts-contactid");
+  assert.ok(update);
+  const prepared = await prepareOperation(
+    {
+      actor: "ada",
+      clientId: "pi",
+      portalId: "5627913",
+      operations: new Map([[update.id, update]]),
+      client: new HubSpotClient(),
+      grant: async () => {
+        throw new Error("no");
+      },
+      approvalSecret: "approval-secret",
+      actionPolicy: releaseActionPolicy({ writes: "approval_required" }),
+    },
+    update.id,
+    { pathParams: { contactId: "7" }, body: { properties: { firstname: "Ada" } } },
+  );
+  const proposalId = (prepared as { proposalId: string }).proposalId;
+  const approved = approveProposal({ proposalId, actor: "ada", portalId: "5627913", secret: "approval-secret" });
+  resetApprovals();
+  await assert.rejects(
+    () =>
+      executeOperation(
+        {
+          actor: "ada",
+          clientId: "pi",
+          portalId: "5627913",
+          operations: new Map([[update.id, update]]),
+          client: new HubSpotClient({
+            fetchImpl: async () => {
+              throw new Error("restarted approval must not call HubSpot");
+            },
+          }),
+          grant: async () => {
+            throw new Error("no");
+          },
+          approvalSecret: "approval-secret",
+          actionPolicy: releaseActionPolicy({ writes: "approval_required" }),
+        },
+        update.id,
+        { pathParams: { contactId: "7" }, body: { properties: { firstname: "Ada" } } },
+        approved.token,
+      ),
+    /Unknown proposal/,
+  );
+  assert.equal(proposalId.length > 0, true);
+  const { TokenStore } = await import("../src/hubspot/tokenStore.ts");
+  const store = new TokenStore(randomBytes(32).toString("base64"));
+  await store.put("ada:5627913", {
+    portalId: "5627913",
+    accessToken: "ada-token",
+    refreshToken: "ada-refresh",
+    expiresAt: Date.now() + 60_000,
+    scopes: ["oauth"],
+    userId: "1",
+  });
+  assert.equal(store.get("bea:5627913"), undefined);
+  assert.throws(() => actionPolicyFromEnv({ action: "allow-delete" }), /HUBSPOT_ACTION_POLICY/);
+  assert.equal(actionPolicyFromEnv({ action: "writes-with-approval" }).deletion, "deny");
+  assert.equal(changeArguments.safeParse({ operationId: "x", approved: true }).success, false);
 });

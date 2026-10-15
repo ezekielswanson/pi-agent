@@ -2,6 +2,8 @@ import { createMcpHandler, McpServer, OAuthError, requireBearerAuth } from "@mod
 import { McpAuth, type RegisteredClient, type UserCredential } from "./auth/provider.ts";
 import { RevocationLog } from "./auth/revocations.ts";
 import { RateLimiter } from "./http/limits.ts";
+import { assertSameOrigin } from "./http/origin.ts";
+import { releaseActionPolicy, type ActionPolicy } from "./policy/actionPolicy.ts";
 import { HubSpotClient } from "./hubspot/client.ts";
 import { beginHubSpotInstall, consumeHubSpotInstall, exchangeHubSpotCode, getValidGrant, hubSpotAuthorizeUrl, type HubSpotOAuthConfig } from "./hubspot/oauth.ts";
 import { TokenStore } from "./hubspot/tokenStore.ts";
@@ -25,6 +27,7 @@ export interface AppConfig {
   tokenFile?: string;
   revocationFile?: string;
   loginLimit?: number;
+  actionPolicy?: ActionPolicy;
   fetchImpl?: typeof fetch;
   hubspotBaseUrl?: string;
 }
@@ -42,6 +45,7 @@ export async function createApp(config: AppConfig): Promise<App> {
   await revocations.load();
   const limiter = new RateLimiter();
   const loginLimit = config.loginLimit ?? 8;
+  const actionPolicy = config.actionPolicy ?? releaseActionPolicy();
   const operations = operationMap(loadOperations());
   const meta = loadMeta();
   const manifest = loadManifest();
@@ -90,6 +94,7 @@ export async function createApp(config: AppConfig): Promise<App> {
         operations,
         client,
         approvalSecret: config.approvalSecret,
+        actionPolicy,
         grant: () => getValidGrant(hubspotConfig, installationKey(subject, config.portalId)),
       },
       meta,
@@ -125,16 +130,26 @@ export async function createApp(config: AppConfig): Promise<App> {
           return json({ error: error instanceof Error ? error.message : "Request rejected." }, 413);
         }
         const username = form.get("username") ?? "";
+        try {
+          assertSameOrigin(request, config.issuer);
+        } catch (error) {
+          return json({ error: error instanceof Error ? error.message : "Origin rejected." }, 403);
+        }
         if (!limiter.allow(`login:${username}`, loginLimit, 60_000)) return json({ error: "Too many login attempts." }, 429);
         try {
           const session = auth.login(username, form.get("password") ?? "");
-          const headers = new Headers({ "content-type": "text/html; charset=utf-8", "set-cookie": sessionCookie(session) });
+          const headers = new Headers({ "content-type": "text/html; charset=utf-8", "set-cookie": sessionCookie(session, config.issuer) });
           return new Response(consentPage(form.get("request") ?? ""), { status: 200, headers });
         } catch (error) {
           return html(loginPage(form.get("request") ?? "", error instanceof Error ? error.message : "Login rejected."), 401);
         }
       }
       if (request.method === "POST" && url.pathname === "/consent") {
+        try {
+          assertSameOrigin(request, config.issuer);
+        } catch (error) {
+          return json({ error: error instanceof Error ? error.message : "Origin rejected." }, 403);
+        }
         const form = new URLSearchParams(await limitedText(request));
         const session = readCookie(request, "mcp_session");
         if (!session) return json({ error: "login required" }, 401);
@@ -168,6 +183,16 @@ export async function createApp(config: AppConfig): Promise<App> {
         const token = body.get("token");
         if (token) await auth.revoke(token);
         return new Response(null, { status: 200 });
+      }
+      if (request.method === "POST" && url.pathname === "/logout") {
+        try {
+          assertSameOrigin(request, config.issuer);
+        } catch (error) {
+          return json({ error: error instanceof Error ? error.message : "Origin rejected." }, 403);
+        }
+        const session = readCookie(request, "mcp_session");
+        if (session) await auth.revoke(session);
+        return new Response(null, { status: 204, headers: { "set-cookie": sessionCookie("", config.issuer, true) } });
       }
       if (request.method === "GET" && url.pathname === "/hubspot/oauth/start") {
         const subject = sessionSubject(auth, readCookie(request, "mcp_session"));
@@ -218,6 +243,11 @@ export async function createApp(config: AppConfig): Promise<App> {
       }
       const approval = url.pathname.match(/^\/approvals\/([^/]+)\/approve$/);
       if (request.method === "POST" && approval) {
+        try {
+          assertSameOrigin(request, config.issuer);
+        } catch (error) {
+          return json({ error: error instanceof Error ? error.message : "Origin rejected." }, 403);
+        }
         if (request.headers.get("authorization")) return json({ error: "MCP access cannot approve a change." }, 401);
         const session = sessionSubject(auth, readCookie(request, "mcp_session"));
         if (!session) return json({ error: "login required" }, 401);
@@ -258,8 +288,10 @@ function html(body: string, status = 200): Response {
   return new Response(body, { status, headers: { "content-type": "text/html; charset=utf-8" } });
 }
 
-function sessionCookie(session: string): string {
-  return `mcp_session=${session}; HttpOnly; SameSite=Lax; Path=/`;
+function sessionCookie(session: string, issuer: string, clear = false): string {
+  const secure = new URL(issuer).protocol === "https:" ? "; Secure" : "";
+  const lifetime = clear ? "; Max-Age=0" : "";
+  return `mcp_session=${session}; HttpOnly; SameSite=Lax; Path=/${secure}${lifetime}`;
 }
 
 function readCookie(request: Request, name: string): string | null {

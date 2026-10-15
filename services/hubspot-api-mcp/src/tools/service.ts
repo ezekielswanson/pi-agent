@@ -1,7 +1,8 @@
 import { audit } from "../audit/log.ts";
 import { HubSpotClient } from "../hubspot/client.ts";
 import type { HubSpotGrant } from "../hubspot/tokenStore.ts";
-import { approveProposal, consumeApproval, prepareChange } from "../policy/approval.ts";
+import { actionLabel, assertActionAllowed, isDeletion, type ActionPolicy } from "../policy/actionPolicy.ts";
+import { approveProposal, consumeApproval, prepareChange, proposalsForDisplay } from "../policy/approval.ts";
 import { assertOperationAllowed, buildPath, scopesSatisfied } from "../policy/exclusions.ts";
 import { PolicyError } from "../policy/errors.ts";
 import { redact } from "../policy/redact.ts";
@@ -15,6 +16,7 @@ export interface ToolContext {
   client: HubSpotClient;
   grant: () => Promise<HubSpotGrant>;
   approvalSecret: string;
+  actionPolicy: ActionPolicy;
   auditFile?: string;
 }
 
@@ -28,23 +30,27 @@ export async function capabilityReport(ctx: ToolContext, meta: { retrievedAt: st
     grantState = "not_connected";
   }
   const implemented = [...ctx.operations.values()].filter((operation) => operation.implemented);
-  const executable = implemented.filter((operation) => grantedScopes.length > 0 && scopesSatisfied(operation, grantedScopes));
+  const labeled = implemented.map((operation) => ({ operation, label: actionLabel(ctx.actionPolicy, operation) }));
+  const granted = (operation: OperationRecord) => grantedScopes.length > 0 && scopesSatisfied(operation, grantedScopes);
   return {
     retrievedAt: meta.retrievedAt,
     apiVersion: meta.apiVersion,
     implementedOperations: implemented.length,
-    executableOperations: executable.length,
+    executableOperations: labeled.filter((item) => item.label.action === "allow" && granted(item.operation)).length,
+    approvalRequiredOperations: labeled.filter((item) => item.label.action === "approval_required" && granted(item.operation)).length,
+    deniedByPolicy: labeled.filter((item) => item.label.action === "deny").length,
     excludedOperations: [...ctx.operations.values()].filter((operation) => operation.excluded).length,
     grantedScopes,
     grantState,
+    actionPolicy: ctx.actionPolicy,
     runtime: "authorized_by_documented_scope_until_a_live_read_is_approved",
-    destructiveExecution: "untested_live",
+    deletion: "denied_this_release",
   };
 }
 
 export function listOperations(
   operations: Map<string, OperationRecord>,
-  filter?: { domain?: string; effect?: string; query?: string; cursor?: number; limit?: number },
+  filter?: { domain?: string; effect?: string; query?: string; cursor?: number; limit?: number; policy?: ActionPolicy },
 ) {
   const needle = filter?.query?.toLowerCase();
   const matches = [...operations.values()]
@@ -54,6 +60,7 @@ export function listOperations(
     .filter((operation) => !needle || `${operation.id} ${operation.title} ${operation.path}`.toLowerCase().includes(needle));
   const start = Math.max(0, filter?.cursor ?? 0);
   const limit = Math.min(100, Math.max(1, filter?.limit ?? 50));
+  const policy = filter?.policy;
   const page = matches.slice(start, start + limit);
   const next = start + page.length;
   return {
@@ -67,6 +74,7 @@ export function listOperations(
       path: operation.path,
       effect: operation.effect,
       destructive: operation.destructive,
+      action: policy ? actionLabel(policy, operation).action : undefined,
       tool: operation.tool,
       scopes: operation.scopeGroups,
       sourceUrl: operation.sourceUrl,
@@ -76,7 +84,7 @@ export function listOperations(
 
 export async function readOperation(ctx: ToolContext, operationId: string, params: CallParams, followPages = false) {
   const operation = requiredOperation(ctx, operationId);
-  if (operation.effect !== "read") throw new PolicyError("This operation is not a read. Prepare it instead.", "validation");
+  assertActionAllowed(ctx.actionPolicy, operation, "read");
   assertOperationAllowed(operation);
   const grant = await ctx.grant();
   const result = await ctx.client.call({ operation, params, token: grant.accessToken, grantedScopes: grant.scopes, followPages });
@@ -98,7 +106,7 @@ export async function readOperation(ctx: ToolContext, operationId: string, param
 
 export async function prepareOperation(ctx: ToolContext, operationId: string, params: CallParams) {
   const operation = requiredOperation(ctx, operationId);
-  if (operation.effect !== "mutate") throw new PolicyError("This operation is a read. Call the read tool.", "validation");
+  assertActionAllowed(ctx.actionPolicy, operation, "prepare");
   assertOperationAllowed(operation);
   const path = buildPath(operation.path, params.pathParams);
   const proposal = prepareChange({
@@ -123,6 +131,7 @@ export async function prepareOperation(ctx: ToolContext, operationId: string, pa
 
 export async function executeOperation(ctx: ToolContext, operationId: string, params: CallParams, approvalToken: string) {
   const operation = requiredOperation(ctx, operationId);
+  assertActionAllowed(ctx.actionPolicy, operation, "execute");
   assertOperationAllowed(operation);
   const path = buildPath(operation.path, params.pathParams);
   const proposal = consumeApproval({
@@ -155,6 +164,10 @@ export async function executeOperation(ctx: ToolContext, operationId: string, pa
 }
 
 export function approveForActor(ctx: Pick<ToolContext, "actor" | "portalId" | "approvalSecret">, proposalId: string) {
+  const proposal = proposalsForDisplay(proposalId);
+  if (proposal && isDeletion(proposal)) {
+    throw new PolicyError("Delete, archive, and purge operations are denied for this release.", "policy");
+  }
   return approveProposal({ proposalId, actor: ctx.actor, portalId: ctx.portalId, secret: ctx.approvalSecret });
 }
 
