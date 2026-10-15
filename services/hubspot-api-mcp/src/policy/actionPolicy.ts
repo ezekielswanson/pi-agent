@@ -13,21 +13,22 @@ const DELETION = new Set(["archive", "permanent_delete", "schema_delete", "pipel
 export function releaseActionPolicy(input?: { writes?: ActionPolicy["writes"]; exportCreation?: ActionPolicy["exportCreation"] }): ActionPolicy {
   return {
     reads: "allow",
-    writes: input?.writes ?? "deny",
+    writes: input?.writes ?? "approval_required",
     exportCreation: input?.exportCreation ?? "deny",
     deletion: "deny",
   };
 }
 
 export function actionPolicyFromEnv(env: { action?: string; exports?: string }): ActionPolicy {
-  if (env.action && env.action !== "read-only" && env.action !== "writes-with-approval") {
-    throw new Error("HUBSPOT_ACTION_POLICY must be read-only or writes-with-approval.");
+  const action = env.action || "read-write";
+  if (action !== "read-only" && action !== "read-write" && action !== "writes-with-approval") {
+    throw new Error("HUBSPOT_ACTION_POLICY must be read-write, writes-with-approval, or read-only.");
   }
   if (env.exports && env.exports !== "deny" && env.exports !== "approval") {
     throw new Error("HUBSPOT_EXPORT_CREATION must be deny or approval.");
   }
   return releaseActionPolicy({
-    writes: env.action === "writes-with-approval" ? "approval_required" : "deny",
+    writes: action === "read-only" ? "deny" : "approval_required",
     exportCreation: env.exports === "approval" ? "approval_required" : "deny",
   });
 }

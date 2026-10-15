@@ -27,7 +27,7 @@ npm test
 npm start
 ```
 
-The process listens on `127.0.0.1`. The default action policy is read-only. Delete, archive, and purge stay denied for this release. ChatGPT, Claude, and Pi are not connected yet. See [Action policy](docs/action-policy.md).
+The process listens on `127.0.0.1`. The default action policy allows reads and approval-required writes. Delete, archive, and purge stay denied for this release. ChatGPT, Claude, and Pi are not connected yet. See [Action policy](docs/action-policy.md).
 
 ## Documents
 

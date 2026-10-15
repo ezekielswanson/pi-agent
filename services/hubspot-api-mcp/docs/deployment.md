@@ -19,7 +19,7 @@ Secret names, never values:
 
 One process is enough for the first launch. These stay in process memory and are lost on restart: MCP authorization codes, refresh tokens, login sessions, HubSpot install states, and change proposals. Clients must sign in again after a restart. Revoked access tokens stay revoked because their hashes are in `MCP_REVOCATION_FILE`. HubSpot grants stay encrypted in `HUBSPOT_TOKEN_FILE` and remain bound to the user and portal that created them. A restart does not revive an approval or move one user's installation to another user. This is a single-instance tradeoff, not horizontal scaling.
 
-The default action policy is read-only. `HUBSPOT_ACTION_POLICY=writes-with-approval` turns on human approval for non-delete changes. `HUBSPOT_EXPORT_CREATION=approval` does the same for export creation. Delete, archive, and purge stay denied. See [Action policy](action-policy.md).
+The default action policy is read and write. Writes require the human approval page. `HUBSPOT_ACTION_POLICY=read-only` denies writes. `HUBSPOT_EXPORT_CREATION=approval` requires that same approval for export creation. Delete, archive, and purge stay denied. See [Action policy](action-policy.md).
 
 The approval page and the HubSpot callback require the login cookie. An MCP access token cannot approve a change. Login is a local username, scrypt password hash, and allowlist. It is not a maintained identity provider.
 

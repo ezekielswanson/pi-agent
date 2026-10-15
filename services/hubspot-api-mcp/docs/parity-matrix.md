@@ -41,7 +41,7 @@ This service is not Breeze and it is not the hosted connector. It exposes allowl
 | `tool_guidance` | `hubspot_list_operations` returns paginated operation metadata and source URLs. | None beyond MCP login | Different content. It does not return HubSpot's hosted guidance text. |
 | `submit_feedback` | None. |  | Gap. Feedback is sent to HubSpot by their MCP server. |
 
-Hosted write tools confirm inside the MCP session. This service rejects an MCP bearer that posts to the approval URL. A separate login cookie has to approve the displayed method, path, query, and body. The default action policy is read-only, and delete, archive, and purge stay denied for this release even after that approval flow is enabled for other writes.
+Hosted write tools confirm inside the MCP session. This service rejects an MCP bearer that posts to the approval URL. A separate login cookie has to approve the displayed method, path, query, and body. The default action policy allows reads and approval-required writes. Delete, archive, and purge stay denied for this release.
 
 Archive and delete stay available only when a 2026-09 operation is implemented and not excluded. `files.delete`, `commerce.payment_links.delete`, and `business_units_view.read` stay omitted. File deletion and payment-link deletion are rejected in the tool layer.
 

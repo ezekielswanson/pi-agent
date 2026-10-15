@@ -257,7 +257,7 @@ test("read-only policy allows custom properties and denies writes, exports, and 
       userId: "1",
     }),
     approvalSecret: "approval-secret",
-    actionPolicy: releaseActionPolicy(),
+    actionPolicy: releaseActionPolicy({ writes: "deny" }),
   };
   const result = await readOperation(ctx, read.id, { pathParams: { contactId: "1" }, query: { properties: "custom_apartment_code" } });
   assert.equal(calls, 1);
@@ -318,7 +318,8 @@ test("discovery pages report the total and capabilities follow the live grant", 
   assert.equal(connected.grantState, "connected");
   assert.equal(connected.executableOperations, 1);
   assert.equal(connected.actionPolicy.deletion, "deny");
-  assert.equal(connected.actionPolicy.writes, "deny");
+  assert.equal(connected.actionPolicy.writes, "approval_required");
+  assert.equal(connected.actionPolicy.reads, "allow");
   assert.deepEqual(connected.grantedScopes, read.scopeGroups.flatMap((group) => group.scopes));
 });
 
@@ -517,6 +518,9 @@ test("restart drops approvals and keeps revocation and portal isolation", async 
   });
   assert.equal(store.get("bea:5627913"), undefined);
   assert.throws(() => actionPolicyFromEnv({ action: "allow-delete" }), /HUBSPOT_ACTION_POLICY/);
-  assert.equal(actionPolicyFromEnv({ action: "writes-with-approval" }).deletion, "deny");
+  assert.equal(actionPolicyFromEnv({}).writes, "approval_required");
+  assert.equal(actionPolicyFromEnv({}).reads, "allow");
+  assert.equal(actionPolicyFromEnv({ action: "read-write" }).deletion, "deny");
+  assert.equal(actionPolicyFromEnv({ action: "read-only" }).writes, "deny");
   assert.equal(changeArguments.safeParse({ operationId: "x", approved: true }).success, false);
 });
