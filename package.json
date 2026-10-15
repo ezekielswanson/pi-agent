@@ -13,7 +13,8 @@
     "smoke:hubspot:live": "tsx scripts/smoke-hubspot-live.ts",
     "typecheck": "tsc --noEmit",
     "test": "node --import tsx --test test/*.test.ts",
-    "check": "npm run typecheck && npm test"
+    "check": "npm run typecheck && npm test",
+    "test:hubspot-api-mcp": "npm test --prefix services/hubspot-api-mcp"
   },
   "dependencies": {
     "@notionhq/client": "^5.4.0",

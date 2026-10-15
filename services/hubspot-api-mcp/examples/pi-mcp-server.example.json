@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "hubspot-api": {
+      "url": "http://127.0.0.1:8787/mcp",
+      "auth": "oauth",
+      "oauth": {
+        "grantType": "authorization_code",
+        "clientId": "local-pi",
+        "redirectUri": "http://127.0.0.1:8788/callback"
+      }
+    }
+  }
+}

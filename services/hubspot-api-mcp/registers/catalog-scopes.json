@@ -1,0 +1,1651 @@
+[
+  {
+    "scope": "account-info.security.read",
+    "description": "Includes access to account activity logs and other account security information. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/account/audit-logs/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "analytics.behavioral_events.send",
+    "description": "Includes access to send custom event occurrences. Available to Professional or Enterprise accounts only.",
+    "availability": "Available to Professional or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/events/send-event-data/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "automation",
+    "description": "Grants access to create and retrieve custom workflow actions, and usage of the v4 workflow APIs. Available to Professional or Enterprise accounts only.",
+    "availability": "Available to Professional or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/2026-03/automation/workflow-actions/custom-action-builder",
+      "https://developers.hubspot.com/api-reference/legacy/automation/workflows/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "automation.sequences.enrollments.write",
+    "description": "Enroll contacts in a sequence. Available to Sales Hub or Service Hub Professional or Enterprise accounts only.",
+    "availability": "Available to Sales Hub or Service Hub Professional or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/automation/sequences/guide#enroll-a-contact-in-a-sequence"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "automation.sequences.read",
+    "description": "View details about sequences. Available to Sales Hub or Service Hub Professional or Enterprise accounts only.",
+    "availability": "Available to Sales Hub or Service Hub Professional or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/automation/sequences/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "behavioral_events.event_definitions.read_write",
+    "description": "Create, read, update, or delete custom events. This includes behavioral event properties. Marketing Hub Enterprise accounts only.",
+    "availability": "",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/events/define-events/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "business_units_view.read",
+    "description": "View brand data, including logo information. Note that the brands functionality is the successor to business units. Available to accounts with the Brands Add-on only.",
+    "availability": "Available to accounts with the Brands Add-on only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/account/brands/guide",
+      "https://knowledge.hubspot.com/branding/manage-your-brands-with-hubspot-brands",
+      "https://www.hubspot.com/brands"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "business-intelligence",
+    "description": "Grants access to the legacy v2 reporting endpoints. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/legacy/deprecated-apis"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "cms.domains.read",
+    "description": "List connected domains in an account. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/cms/domains/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "cms.domains.write",
+    "description": "Create, update, and delete connected domains. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/cms/domains/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "cms.functions.read",
+    "description": "View all Content Hub serverless functions, any related secrets, and function execution results. Available to Content Hub Enterprise accounts only.",
+    "availability": "Available to Content Hub Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/cms/start-building/features/serverless-functions/overview"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "cms.functions.write",
+    "description": "Grants access to write Content Hub serverless functions and secrets. Available to Content Hub Enterprise accounts only.",
+    "availability": "Available to Content Hub Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/cms/start-building/features/serverless-functions/overview"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "cms.knowledge_base.articles.read",
+    "description": "View details about knowledge articles using the GraphQL API. Available to Service Hub Professional or Enterprise accounts only.",
+    "availability": "Available to Service Hub Professional or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/cms/start-building/features/data-driven-content/graphql/query-hubspot-data-using-graphql#use-a-graphql-query-in-an-api-request"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "cms.membership.access_groups.read",
+    "description": "View membership access groups and their definitions. Available to Service Hub or Content Hub Professional or Enterprise accounts only.",
+    "availability": "Available to Service Hub or Content Hub Professional or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/cms/start-building/features/memberships/overview"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "cms.membership.access_groups.write",
+    "description": "Create, edit, and delete membership access groups. Available to Service Hub or Content Hub Professional or Enterprise accounts only.",
+    "availability": "Available to Service Hub or Content Hub Professional or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/cms/start-building/features/memberships/overview"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "collector.graphql_query.execute",
+    "description": "Query data from your HubSpot account using the GraphQL API endpoint Available to CMS Hub Professional or Enterprise accounts only.",
+    "availability": "Available to CMS Hub Professional or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/cms/start-building/features/data-driven-content/graphql/query-hubspot-data-using-graphql#use-a-graphql-query-in-an-api-request"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "collector.graphql_schema.read",
+    "description": "Perform introspection queries via GraphQL application clients such as GraphiQL. Available to CMS Hub Professional or Enterprise accounts only.",
+    "availability": "Available to CMS Hub Professional or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/cms/start-building/features/data-driven-content/graphql/query-hubspot-data-using-graphql#use-a-graphql-query-in-an-api-request",
+      "https://developers.hubspot.com/cms/start-building/features/data-driven-content/graphql/query-hubspot-data-using-graphql#test-and-run-queries-interactively-using-graphiql"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "communication_preferences.read",
+    "description": "View details of your contacts\u2019 subscription preferences. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/legacy/communication-preferences/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "communication_preferences.read_write",
+    "description": "Provides access to subscribe or unsubscribe contacts to your subscription types, as well as retrieve subscription preferences for your contacts. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/legacy/communication-preferences/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "communication_preferences.statuses.batch.read",
+    "description": "Allows you to batch retrieve contacts based on their subscription status. Available to Marketing Hub Enterprise accounts only.",
+    "availability": "Available to Marketing Hub Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/legacy/communication-preferences/guide#using-batch-subscription-endpoints"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "communication_preferences.statuses.batch.write",
+    "description": "Allows you to batch update the subscription status of multiple contacts. Available to Marketing Hub Enterprise accounts only.",
+    "availability": "Available to Marketing Hub Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/legacy/communication-preferences/guide#using-batch-subscription-endpoints"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "communication_preferences.write",
+    "description": "Subscribe or unsubscribe contacts to your subscription types. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/legacy/communication-preferences/guide#update-subscription-preferences-for-a-specific-contact"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "content",
+    "description": "Grants access to content APIs, including website pages, landing pages, marketing email, and blog APIs. Available to CMS Hub Professional or Enterprise, or Marketing Hub Professional or Enterprise accounts only.",
+    "availability": "Available to CMS Hub Professional or Enterprise, or Marketing Hub Professional or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/cms/pages/website-pages/get-website-pages",
+      "https://developers.hubspot.com/api-reference/latest/cms/pages/landing-pages/get-landing-pages",
+      "https://developers.hubspot.com/api-reference/latest/marketing/marketing-emails/guide",
+      "https://developers.hubspot.com/api-reference/latest/cms/blogs/posts/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "conversations.read",
+    "description": "View details about actors, messages, and threads in help desk and the conversations inbox. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/conversations/guide#get-actors",
+      "https://developers.hubspot.com/api-reference/latest/conversations/guide#retrieve-messages",
+      "https://developers.hubspot.com/api-reference/latest/conversations/guide#retrieve-threads"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "conversations.visitor_identification.tokens.create",
+    "description": "Fetch identification tokens for authenticated website visitors interacting with the HubSpot chat widget. Available to Professional or Enterprise accounts only.",
+    "availability": "Available to Professional or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/legacy/conversations/visitor-identification/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "conversations.write",
+    "description": "Create and manage threads and messages in the conversations inbox. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/conversations/guide#threads-%26-messages"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "conversations.custom_channels.read",
+    "description": "View details about custom channels for connected inboxes and help desk. Available to Sales Hub or Service Hub Enterprise accounts only.",
+    "availability": "Available to Sales Hub or Service Hub Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/conversations/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "conversations.custom_channels.write",
+    "description": "Manage custom channels for connected inboxes and help desk. Available to Sales Hub or Service Hub Enterprise accounts only.",
+    "availability": "Available to Sales Hub or Service Hub Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/conversations/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.export",
+    "description": "Export records from your CRM for all CRM data types. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/exports/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.import",
+    "description": "Allows you to import records into your CRM. This includes creating new records or modifying any of your existing records for all CRM data types (contacts, companies, deals, tickets, etc). Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/imports/guide#scope-requirements"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.dealsplits.read_write",
+    "description": "Create or retrieve deal splits on a deal. Available to Sales Hub Enterprise accounts only.",
+    "availability": "Available to Sales Hub Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/deal-splits/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.lists.read",
+    "description": "View details about contact lists. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/lists/guide#retrieve-lists"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.lists.write",
+    "description": "Create, delete, or make changes to contact lists. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/lists/guide#create-a-list"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.appointments.read",
+    "description": "View properties and other details about appointments. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/appointments/get-appointments"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.appointments.sensitive.read",
+    "description": "View Sensitive Data properties for appointments. Available to Enterprise accounts only.",
+    "availability": "Available to Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#sensitive-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.appointments.sensitive.write",
+    "description": "Edit Sensitive Data properties and values for appointments. Available to Enterprise accounts only.",
+    "availability": "Available to Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#sensitive-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.appointments.write",
+    "description": "Create, delete, or make changes to appointments. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/appointments/create-appointment"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.carts.read",
+    "description": "View properties and other details about carts. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/carts/guide#retrieve-carts"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.carts.write",
+    "description": "Create, delete, or make changes to carts. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/carts/guide#create-carts"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.commercepayments.read",
+    "description": "View details about commerce payments. Available to Starter accounts only.",
+    "availability": "Available to Starter accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/commerce-payments/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.companies.highly_sensitive.read",
+    "description": "View Highly Sensitive Data properties for companies. Available to Enterprise accounts only.",
+    "availability": "Available to Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#highly-sensitive-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.companies.highly_sensitive.write",
+    "description": "Edit Highly Sensitive Data properties and values for companies. Available to Enterprise accounts only.",
+    "availability": "Available to Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#highly-sensitive-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.companies.read",
+    "description": "View properties and other details about companies. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/companies/guide#retrieve-companies"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.companies.sensitive.read",
+    "description": "View Sensitive Data properties for companies. Available to Enterprise accounts only.",
+    "availability": "Available to Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#sensitive-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.companies.sensitive.write",
+    "description": "Edit Sensitive Data properties and values for companies. Available to Enterprise accounts only.",
+    "availability": "Available to Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#sensitive-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.companies.write",
+    "description": "View properties and create, delete, or make changes to companies. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/companies/guide#create-companies"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.contacts.highly_sensitive.read",
+    "description": "View Highly Sensitive Data properties for contacts. Available to Enterprise accounts only.",
+    "availability": "Available to Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#highly-sensitive-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.contacts.highly_sensitive.write",
+    "description": "Edit Highly Sensitive Data properties and values for contacts. Available to Enterprise accounts only.",
+    "availability": "Available to Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#highly-sensitive-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.contacts.read",
+    "description": "View properties and other details about contacts. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/contacts/guide#retrieve-contacts"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.contacts.sensitive.read",
+    "description": "View Sensitive Data properties for contacts. Available to Enterprise accounts only.",
+    "availability": "Available to Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#sensitive-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.contacts.sensitive.write",
+    "description": "Edit Sensitive Data properties and values for contacts. Available to Enterprise accounts only.",
+    "availability": "Available to Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#sensitive-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.contacts.write",
+    "description": "Create, delete, and make changes to contacts. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/contacts/guide#create-contacts"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.courses.read",
+    "description": "View details about courses. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/courses/get-courses"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.courses.write",
+    "description": "Create, delete, or make changes to courses. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/courses/create-course"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.custom.highly_sensitive.read",
+    "description": "View Highly Sensitive Data properties for custom objects. Available to Enterprise accounts only.",
+    "availability": "Available to Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#highly-sensitive-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.custom.highly_sensitive.write",
+    "description": "Edit Highly Sensitive Data properties and values for custom objects. Available to Enterprise accounts only.",
+    "availability": "Available to Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#highly-sensitive-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.custom.read",
+    "description": "View details about custom objects. Available to Enterprise accounts only.",
+    "availability": "Available to Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/custom-objects/guide#retrieve-custom-object-records"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.custom.sensitive.read",
+    "description": "View Sensitive Data properties for custom objects. Available to Enterprise accounts only.",
+    "availability": "Available to Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#sensitive-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.custom.sensitive.write",
+    "description": "Edit Sensitive Data properties and values for custom objects. Available to Enterprise accounts only.",
+    "availability": "Available to Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#sensitive-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.custom.write",
+    "description": "Create, delete, or make changes to custom objects. Available to Enterprise accounts only.",
+    "availability": "Available to Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/custom-objects/guide#create-a-custom-object"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.deals.highly_sensitive.read",
+    "description": "View Highly Sensitive Data properties for deals. Available to Enterprise accounts only.",
+    "availability": "Available to Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#highly-sensitive-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.deals.highly_sensitive.write",
+    "description": "Edit Highly Sensitive Data properties and values for deals. Available to Enterprise accounts only.",
+    "availability": "Available to Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#highly-sensitive-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.deals.read",
+    "description": "View properties and other details about deals. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/deals/guide#retrieve-deals"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.deals.sensitive.read",
+    "description": "View Sensitive Data properties for deals. Available to Enterprise accounts only.",
+    "availability": "Available to Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#sensitive-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.deals.sensitive.write",
+    "description": "Edit Sensitive Data properties and values for deals. Available to Enterprise accounts only.",
+    "availability": "Available to Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#sensitive-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.deals.write",
+    "description": "Create, delete, or make changes to deals. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/deals/guide#create-deals"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.feedback_submission.read",
+    "description": "View details about submissions to any of your feedback surveys. Available to Service Hub Professional or Enterprise accounts only.",
+    "availability": "Available to Service Hub Professional or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/feedback-submissions/guide#retrieve-survey-responses"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.goals.read",
+    "description": "View all goals. Available to Sales Hub Starter, Professional, or Enterprise accounts only.",
+    "availability": "Available to Sales Hub Starter, Professional, or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/goals/guide#retrieve-goals"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.invoices.read",
+    "description": "View details about invoices. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/invoices/guide#retrieve-invoices"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.leads.read",
+    "description": "View properties and other details about leads. Available to Sales Hub Professional or Enterprise accounts only.",
+    "availability": "Available to Sales Hub Professional or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/leads/guide#retrieve-leads"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.leads.write",
+    "description": "Create, delete, or make changes to leads. Available to Sales Hub Professional or Enterprise accounts only.",
+    "availability": "Available to Sales Hub Professional or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/leads/guide#create-leads"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.line_items.read",
+    "description": "View properties and other details about line items. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/line-items/guide#retrieve-a-line-item"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.line_items.write",
+    "description": "Create, delete, or make changes to line items. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/line-items/guide#create-a-line-item"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.listings.read",
+    "description": "View properties and other details about listings. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/listings/get-listings"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.listings.write",
+    "description": "Create, delete, or make changes to listings. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/listings/create-listing"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.marketing_events.read",
+    "description": "View details about marketing events. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/marketing/marketing-events/guide#get-event-details"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.marketing_events.write",
+    "description": "Create, delete, or make changes to marketing events. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/marketing/marketing-events/guide#create-an-event"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.orders.read",
+    "description": "View properties and other details about orders. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/orders/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.orders.write",
+    "description": "Create, delete, or make changes to orders. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/orders/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.owners.read",
+    "description": "View details about users assigned to a CRM record. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/owners/guide#retrieve-a-list-of-owners"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.partner-clients.read",
+    "description": "View details about partner clients objects. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/partner-clients/get-partner-clients"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.partner-clients.write",
+    "description": "Create, delete, or make changes to partner clients objects. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/partner-clients/update-partner-client"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.partner-services.read",
+    "description": "View details about partner service objects. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/partner-services/get-partner-services"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.partner-services.write",
+    "description": "Create, delete, or make changes to partner service objects. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/partner-services/update-partner-service"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.quotes.read",
+    "description": "View properties and other details about quotes and quote templates. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/quotes/get-quotes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.quotes.write",
+    "description": "Create, delete, or make changes to quotes (including legacy quotes). Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/quotes/guide",
+      "https://developers.hubspot.com/api-reference/legacy/crm/objects/quotes/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.services.read",
+    "description": "View properties and other details about services. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/services/get-services"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.services.write",
+    "description": "Create, delete, or make changes to services. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/services/create-service"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.subscriptions.read",
+    "description": "View properties and other details about commerce subscriptions. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/commerce-subscriptions/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.tickets.read",
+    "description": "View properties and other details about tickets Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/tickets/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.tickets.write",
+    "description": "Create, delete, or make changes to tickets Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/tickets/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.tickets.sensitive.read",
+    "description": "Access to view Sensitive Data properties and values for tickets. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#sensitive-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.tickets.sensitive.write",
+    "description": "Access to edit Sensitive Data properties and values for tickets. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#sensitive-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.tickets.highly_sensitive.read",
+    "description": "Access to view highly Sensitive Data properties and values for tickets. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#sensitive-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.tickets.highly_sensitive.write",
+    "description": "Access to edit highly Sensitive Data properties and values for tickets. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#sensitive-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.users.read",
+    "description": "View properties and other details about users. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/users/guide#retrieve-users"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.objects.users.write",
+    "description": "Create, delete, or make changes to users. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/users/guide#update-users"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.pipelines.orders.read",
+    "description": "View details about order pipelines. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/pipelines/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.pipelines.orders.write",
+    "description": "Create, delete, or make changes to order pipelines. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/pipelines/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.appointments.read",
+    "description": "View details about property settings for appointments. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/appointments/get-appointments"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.appointments.write",
+    "description": "Create, delete, or make changes to property settings for appointments Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/appointments/create-appointment"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.carts.read",
+    "description": "View details about property settings for carts. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/carts/guide#retrieve-carts"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.carts.write",
+    "description": "Create, delete, or make changes to property settings for carts. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/carts/guide#create-carts"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.courses.read",
+    "description": "View details about property settings for courses. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/courses/get-courses"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.courses.write",
+    "description": "Create, delete, or make changes to property settings for courses. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/courses/create-course"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.commercepayments.read",
+    "description": "View details about property settings for commerce payments. Available to Starter accounts only.",
+    "availability": "Available to Starter accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/commerce-payments/guide#properties"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.companies.read",
+    "description": "View details about property settings for companies Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/companies/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.companies.write",
+    "description": "Create, delete, or make changes to property settings for companies. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/companies/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.contacts.read",
+    "description": "View details about property settings for contacts. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/contacts/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.contacts.write",
+    "description": "Create, delete, or make changes to property settings for contacts. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/contacts/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.custom.read",
+    "description": "View details about custom object definitions in the HubSpot CRM. Available to Enterprise accounts only.",
+    "availability": "Available to Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/custom-objects/guide#properties"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.deals.read",
+    "description": "View details about property settings for deals. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/deals/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.deals.write",
+    "description": "Create, delete, or make changes to property settings for deals. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/deals/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.invoices.read",
+    "description": "View details about property settings for invoices. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/invoices/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.invoices.write",
+    "description": "Create, delete, or make changes to property settings for invoices Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/invoices/guide#common-properties"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.line_items.read",
+    "description": "View details about line items properties. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/line-items/guide#line-item-properties"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.listings.read",
+    "description": "View details about property settings for listings Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/listings/get-listings"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.listings.write",
+    "description": "Create, delete, or make changes to property settings for listings Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/listings/create-listing"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.orders.read",
+    "description": "View details about property settings for orders Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/orders/guide#order-properties"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.orders.write",
+    "description": "Create, manage, or make changes to property settings for orders Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/orders/guide#order-properties"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.quotes.read",
+    "description": "View details about quotes and quotes templates. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/quotes/guide",
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/quotes/guide#quote-templates"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.quotes.write",
+    "description": "Create, manage, or make changes to property settings for quotes Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/quotes/guide#quote-properties"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.services.read",
+    "description": "View details about property settings for services Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/services/get-services"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.services.write",
+    "description": "Create, manage, or make changes to property settings for services Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/services/create-service"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.subscriptions.read",
+    "description": "View details about property settings for commerce subscriptions. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/commerce-subscriptions/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "crm.schemas.subscriptions.write",
+    "description": "Create, manage, or make changes to property settings for commerce subscriptions. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/commerce-subscriptions/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "external_integrations.forms.access",
+    "description": "Includes the ability to rename, delete, and clone existing forms when using the HubSpot WordPress plugin. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://knowledge.hubspot.com/integrations/install-the-hubspot-wordpress-plugin"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "files",
+    "description": "TagwarningA legacy scope to access, manage, and upload in the HubSpot file manager. For existing apps using this scope, it\u2019s recommended that you migrate to use the corresponding new granular scopes (e.g., files.read) for more control and transparency. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": true,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/files/guide",
+      "https://developers.hubspot.com/apps/developer-platform/build-apps/migrate-an-app/update-your-app-to-granular-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "files.delete",
+    "description": "Delete files in the HubSpot file manager. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/files/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "files.read",
+    "description": "View details about files in the HubSpot file manager. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/files/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "files.ui_hidden.read",
+    "description": "Access hidden or deleted files uploaded to the HubSpot file manager. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/files/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "files.ui_hidden.write",
+    "description": "Manage hidden or deleted files uploaded to the HubSpot file manager. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/files/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "files.write",
+    "description": "Upload and manage files in the HubSpot file manager. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/files/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "forms",
+    "description": "Grants access to the legacy and v3 forms APIs Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/legacy/marketing/forms/guide",
+      "https://developers.hubspot.com/api-reference/legacy/marketing/forms/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "forms-uploaded-files",
+    "description": "Grants access to the legacy v1 uploaded form files API Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/legacy/marketing/forms/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "hubdb",
+    "description": "TagwarningA legacy scope that provides both retrieve and manage HubDB data. For existing apps using this scope, it\u2019s recommended that you migrate to use the corresponding new granular scopes (e.g., hubdb.tables.read) for more control and transparency. Available to CMS Hub Professional or Enterprise, or Marketing Hub Professional or Enterprise accounts only.",
+    "availability": "Available to CMS Hub Professional or Enterprise, or Marketing Hub Professional or Enterprise accounts only.",
+    "legacy": true,
+    "links": [
+      "https://developers.hubspot.com/api-reference/legacy/cms/hubdb/guide",
+      "https://developers.hubspot.com/apps/developer-platform/build-apps/migrate-an-app/update-your-app-to-granular-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "hubdb.rows.read",
+    "description": "Retrieve row data from HubDB. Available to CMS Hub Professional or Enterprise, or Marketing Hub Professional or Enterprise accounts only.",
+    "availability": "Available to CMS Hub Professional or Enterprise, or Marketing Hub Professional or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/cms/hubdb/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "hubdb.rows.write",
+    "description": "Add or modify rows in HubDB. Available to CMS Hub Professional or Enterprise, or Marketing Hub Professional or Enterprise accounts only.",
+    "availability": "Available to CMS Hub Professional or Enterprise, or Marketing Hub Professional or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/cms/hubdb/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "hubdb.tables.publish",
+    "description": "Publish a drafted table or unpublish an existing published HubDB table. Available to CMS Hub Professional or Enterprise, or Marketing Hub Professional or Enterprise accounts only.",
+    "availability": "Available to CMS Hub Professional or Enterprise, or Marketing Hub Professional or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/cms/hubdb/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "hubdb.tables.read",
+    "description": "Retrieve a HubDB table. Available to CMS Hub Professional or Enterprise, or Marketing Hub Professional or Enterprise accounts only.",
+    "availability": "Available to CMS Hub Professional or Enterprise, or Marketing Hub Professional or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/cms/hubdb/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "hubdb.tables.write",
+    "description": "Update, clone, or delete a HubDB table. Available to CMS Hub Professional or Enterprise, or Marketing Hub Professional or Enterprise accounts only.",
+    "availability": "Available to CMS Hub Professional or Enterprise, or Marketing Hub Professional or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/cms/hubdb/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "marketing.campaigns.read",
+    "description": "View details about marketing campaigns and their associated assets. Available to Marketing Hub Professional or Enterprise accounts only.",
+    "availability": "Available to Marketing Hub Professional or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/marketing/campaigns/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "marketing.campaigns.revenue.read",
+    "description": "View revenue details and deal amounts attributed to a marketing campaign. Available to Marketing Hub Professional or Enterprise accounts only.",
+    "availability": "Available to Marketing Hub Professional or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/marketing/campaigns/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "marketing.campaigns.write",
+    "description": "Create, update, and delete marketing campaigns. Available to Marketing Hub Professional or Enterprise accounts only.",
+    "availability": "Available to Marketing Hub Professional or Enterprise accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/marketing/campaigns/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "marketing-email",
+    "description": "Grants access to retrieve and send marketing emails. Publishing marketing emails using this API requires Marketing Hub Enterprise. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/marketing/marketing-emails/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "media_bridge.read",
+    "description": "Grants access to events and objects from the media bridge API. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/cms/media-bridge/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "media_bridge.write",
+    "description": "Grants access to create and update events and objects from the media bridge API. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/cms/media-bridge/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "oauth",
+    "description": "Basic scope required for OAuth. This scope is added by default to all apps. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/apps/developer-platform/build-apps/create-an-app"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "sales-email-read",
+    "description": "Grants access to read and manage one-to-one email engagements Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/activities/emails/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "scheduler.meetings.meeting-link.read",
+    "description": "Read metadata and booking availability for meeting links Available to Professional accounts only.",
+    "availability": "Available to Professional accounts only.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/scheduler/guide"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "settings.billing.write",
+    "description": "Make changes to your account\u2019s billing settings. This includes managing and assigning paid seats for users. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/account/account-information/get-account-details"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "settings.currencies.read",
+    "description": "Reads existing exchange rates along with the current company currency associated with your HubSpot account. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/account/settings/multicurrency/guide#retrieve-account-currencies-and-exchange-rates"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "settings.currencies.write",
+    "description": "Create, update and delete exchange rates along with updating the company currency associated with your HubSpot account. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/account/settings/multicurrency/guide#add-account-currencies-and-set-exchange-rates"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "settings.users.read",
+    "description": "View details about account users and their permissions. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/account/settings/user-provisioning/get-users"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "settings.users.write",
+    "description": "Manage users and user permissions on your HubSpot account. This includes creating new users, assigning permissions and roles, and deleting existing users. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/account/settings/user-provisioning/create-user"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "settings.users.teams.read",
+    "description": "See details about the teams in an account. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/account/settings/user-provisioning/teams/get-teams"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "settings.users.teams.write",
+    "description": "Assign users to teams on your HubSpot account. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/account/settings/user-provisioning/users/update-user"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "tax_rates.read",
+    "description": "View details about tax rates configured in your account. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/line-items/guide#retrieve-tax-rates"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "tickets",
+    "description": "TagwarningA legacy scope that provides both retrieve and manage ticket data. For existing apps using this scope, it\u2019s recommended that you migrate to use the corresponding new granular scopes (e.g., crm.objects.tickets.read) for more control and transparency. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": true,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/objects/tickets/guide",
+      "https://developers.hubspot.com/apps/developer-platform/build-apps/migrate-an-app/update-your-app-to-granular-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "tickets.sensitive",
+    "description": "TagwarningA legacy scope that grants access to view and edit Sensitive Data properties and values for tickets. For existing apps using this scope, it\u2019s recommended that you migrate to use the corresponding new granular scopes (e.g., crm.objects.tickets.sensitive.read) for more control and transparency. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": true,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#sensitive-scopes",
+      "https://developers.hubspot.com/apps/developer-platform/build-apps/migrate-an-app/update-your-app-to-granular-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "tickets.highly_sensitive",
+    "description": "TagwarningA legacy scope that grants access to view and edit highly Sensitive Data properties and values for tickets. For existing apps using this scope, it\u2019s recommended that you migrate to use the corresponding new granular scopes (e.g., crm.objects.tickets.highly_sensitive.read) for more control and transparency. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": true,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/crm/properties/sensitive-data#sensitive-scopes",
+      "https://developers.hubspot.com/apps/developer-platform/build-apps/migrate-an-app/update-your-app-to-granular-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "timeline",
+    "description": "TagwarningA legacy scope that grants access to manage legacy timeline events on HubSpot CRM records. For existing apps using this scope, it\u2019s recommended that you migrate to use the corresponding new granular scopes (e.g., timeline.read) for more control and transparency. Available to all accounts.",
+    "availability": "Available to all accounts.",
+    "legacy": true,
+    "links": [
+      "https://developers.hubspot.com/api-reference/legacy/crm/extensions/timeline/v1/get-integrations-v1-application-id-timeline-event-event-typeid-event-id",
+      "https://developers.hubspot.com/apps/developer-platform/build-apps/migrate-an-app/update-your-app-to-granular-scopes"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  },
+  {
+    "scope": "transactional-email",
+    "description": "Access and manage transactional emails. Available to Marketing Hub Professional or Enterprise accounts with Transactional Email Add-on only.\\nPlease note: the scopes listed below may appear on certain app configuration pages but do unot",
+    "availability": "Available to Marketing Hub Professional or Enterprise accounts with Transactional Email Add-on only.\\nPlease note: the scopes listed below may appear on certain app configuration pages but do unot",
+    "legacy": false,
+    "links": [
+      "https://developers.hubspot.com/api-reference/latest/marketing/transactional-emails/guide",
+      "https://www.hubspot.com/products/marketing/transactional-email"
+    ],
+    "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+  }
+]
