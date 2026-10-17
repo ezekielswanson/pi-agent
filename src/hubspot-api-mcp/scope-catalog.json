@@ -1,0 +1,837 @@
+{
+  "retrievedOn": "2026-10-12",
+  "sourceUrl": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes",
+  "sourceNote": "Full scopes table parsed from the official page markdown, including legacy-tagged rows. The no-API warning and deprecated list below the table are stored separately and are not additional table rows.",
+  "apiVersionContext": "Scope reference fetched 2026-10-12. Implemented HubSpot calls use API version 2026-09.",
+  "rows": [
+    {
+      "name": "account-info.security.read",
+      "legacy": false,
+      "description": "Includes access to Includes access to account activity logs and other account security information. Available to all accounts. and other account security information. Available to all accounts."
+    },
+    {
+      "name": "analytics.behavioral_events.send",
+      "legacy": false,
+      "description": "Includes access to send Includes access to send custom event occurrences. Available to *Professional* or *Enterprise* accounts only.. Available to *Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "automation",
+      "legacy": false,
+      "description": "Grants access to create and retrieve Grants access to create and retrieve custom workflow actions, and usage of the v4 workflow APIs. Available to *Professional* or *Enterprise* accounts only., and usage of the Grants access to create and retrieve custom workflow actions, and usage of the v4 workflow APIs. Available to *Professional* or *Enterprise* accounts only.. Available to *Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "automation.sequences.enrollments.write",
+      "legacy": false,
+      "description": "Enroll contacts in a Enroll contacts in a sequence. Available to ***Sales Hub*** or ***Service Hub*** *Professional* or *Enterprise* accounts only.. Available to ***Sales Hub*** or ***Service Hub*** *Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "automation.sequences.read",
+      "legacy": false,
+      "description": "View details about View details about sequences. Available to ***Sales Hub*** or ***Service Hub*** *Professional* or *Enterprise* accounts only.. Available to ***Sales Hub*** or ***Service Hub*** *Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "behavioral_events.event_definitions.read_write",
+      "legacy": false,
+      "description": "Create, read, update, or delete Create, read, update, or delete custom events. This includes behavioral event properties. ***Marketing Hub*** *Enterprise* accounts only.. This includes behavioral event properties. ***Marketing Hub*** *Enterprise* accounts only."
+    },
+    {
+      "name": "business_units_view.read",
+      "legacy": false,
+      "description": "View View brand data, including logo information. Note that the brands functionality is the successor to business units. Available to accounts with the Brands Add-on only., including logo information. Note that the View brand data, including logo information. Note that the brands functionality is the successor to business units. Available to accounts with the Brands Add-on only. is the successor to business units. Available to accounts with the View brand data, including logo information. Note that the brands functionality is the successor to business units. Available to accounts with the Brands Add-on only. only."
+    },
+    {
+      "name": "business-intelligence",
+      "legacy": false,
+      "description": "Grants access to the Grants access to the legacy v2 reporting endpoints. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "cms.domains.read",
+      "legacy": false,
+      "description": "List List connected domains in an account. Available to all accounts. in an account. Available to all accounts."
+    },
+    {
+      "name": "cms.domains.write",
+      "legacy": false,
+      "description": "Create, update, and delete Create, update, and delete connected domains. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "cms.functions.read",
+      "legacy": false,
+      "description": "View all View all Content Hub serverless functions, any related secrets, and function execution results. Available to ***Content Hub** Enterprise* accounts only., any related secrets, and function execution results. Available to ***Content Hub** Enterprise* accounts only."
+    },
+    {
+      "name": "cms.functions.write",
+      "legacy": false,
+      "description": "Grants access to write Grants access to write Content Hub serverless functions and secrets. Available to ***Content Hub** Enterprise* accounts only. and secrets. Available to ***Content Hub** Enterprise* accounts only."
+    },
+    {
+      "name": "cms.knowledge_base.articles.read",
+      "legacy": false,
+      "description": "View details about knowledge articles using the View details about knowledge articles using the GraphQL API. Available to ***Service Hub*** *Professional* or *Enterprise* accounts only.. Available to ***Service Hub*** *Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "cms.membership.access_groups.read",
+      "legacy": false,
+      "description": "View View membership access groups and their definitions. Available to ***Service Hub*** or ***Content Hub** Professional* or *Enterprise* accounts only. and their definitions. Available to ***Service Hub*** or ***Content Hub** Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "cms.membership.access_groups.write",
+      "legacy": false,
+      "description": "Create, edit, and delete Create, edit, and delete membership access groups. Available to ***Service Hub*** or ***Content Hub** Professional* or *Enterprise* accounts only.. Available to ***Service Hub*** or ***Content Hub** Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "collector.graphql_query.execute",
+      "legacy": false,
+      "description": "Query data from your HubSpot account using the Query data from your HubSpot account using the GraphQL API endpoint Available to ***CMS Hub*** *Professional* or *Enterprise* accounts only. Available to ***CMS Hub*** *Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "collector.graphql_schema.read",
+      "legacy": false,
+      "description": "Perform Perform introspection queries via GraphQL application clients such as GraphiQL. Available to ***CMS Hub** Professional* or *Enterprise* accounts only. via GraphQL application clients such as Perform introspection queries via GraphQL application clients such as GraphiQL. Available to ***CMS Hub** Professional* or *Enterprise* accounts only.. Available to ***CMS Hub** Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "communication_preferences.read",
+      "legacy": false,
+      "description": "View details of your contacts' View details of your contacts' subscription preferences. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "communication_preferences.read_write",
+      "legacy": false,
+      "description": "Provides access to subscribe or unsubscribe contacts to your Provides access to subscribe or unsubscribe contacts to your subscription types, as well as retrieve subscription preferences for your contacts. Available to all accounts., as well as retrieve subscription preferences for your contacts. Available to all accounts."
+    },
+    {
+      "name": "communication_preferences.statuses.batch.read",
+      "legacy": false,
+      "description": "Allows you to Allows you to batch retrieve contacts based on their subscription status. Available to ***Marketing Hub*** *Enterprise* accounts only. based on their subscription status. Available to ***Marketing Hub*** *Enterprise* accounts only."
+    },
+    {
+      "name": "communication_preferences.statuses.batch.write",
+      "legacy": false,
+      "description": "Allows you to Allows you to batch update the subscription status of multiple contacts. Available to ***Marketing Hub*** *Enterprise* accounts only. the subscription status of multiple contacts. Available to ***Marketing Hub*** *Enterprise* accounts only."
+    },
+    {
+      "name": "communication_preferences.write",
+      "legacy": false,
+      "description": "Subscribe or unsubscribe contacts to your subscription types. Available to all accounts. contacts to your subscription types. Available to all accounts."
+    },
+    {
+      "name": "content",
+      "legacy": false,
+      "description": "Grants access to content APIs, including Grants access to content APIs, including website pages, landing pages, marketing email, and blog APIs. Available to ***CMS Hub*** *Professional* or *Enterprise*, or ***Marketing Hub*** *Professional* or *Enterprise* accounts only., Grants access to content APIs, including website pages, landing pages, marketing email, and blog APIs. Available to ***CMS Hub*** *Professional* or *Enterprise*, or ***Marketing Hub*** *Professional* or *Enterprise* accounts only., Grants access to content APIs, including website pages, landing pages, marketing email, and blog APIs. Available to ***CMS Hub*** *Professional* or *Enterprise*, or ***Marketing Hub*** *Professional* or *Enterprise* accounts only., and Grants access to content APIs, including website pages, landing pages, marketing email, and blog APIs. Available to ***CMS Hub*** *Professional* or *Enterprise*, or ***Marketing Hub*** *Professional* or *Enterprise* accounts only. APIs. Available to ***CMS Hub*** *Professional* or *Enterprise*, or ***Marketing Hub*** *Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "conversations.read",
+      "legacy": false,
+      "description": "View details about View details about actors, messages, and threads in help desk and the conversations inbox. Available to all accounts., View details about actors, messages, and threads in help desk and the conversations inbox. Available to all accounts., and View details about actors, messages, and threads in help desk and the conversations inbox. Available to all accounts. in help desk and the conversations inbox. Available to all accounts."
+    },
+    {
+      "name": "conversations.visitor_identification.tokens.create",
+      "legacy": false,
+      "description": "Fetch Fetch identification tokens for authenticated website visitors interacting with the HubSpot chat widget. Available to *Professional* or *Enterprise* accounts only. for authenticated website visitors interacting with the HubSpot chat widget. Available to *Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "conversations.write",
+      "legacy": false,
+      "description": "Create and manage Create and manage threads and messages in the conversations inbox. Available to all accounts. in the conversations inbox. Available to all accounts."
+    },
+    {
+      "name": "conversations.custom_channels.read",
+      "legacy": false,
+      "description": "View details about View details about custom channels for connected inboxes and help desk. Available to ***Sales Hub*** or ***Service Hub*** *Enterprise* accounts only. for connected inboxes and help desk. Available to ***Sales Hub*** or ***Service Hub*** *Enterprise* accounts only."
+    },
+    {
+      "name": "conversations.custom_channels.write",
+      "legacy": false,
+      "description": "Manage Manage custom channels for connected inboxes and help desk. Available to ***Sales Hub*** or ***Service Hub*** *Enterprise* accounts only. for connected inboxes and help desk. Available to ***Sales Hub*** or ***Service Hub*** *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.export",
+      "legacy": false,
+      "description": "Export records from your CRM for all CRM data types. Available to all accounts. from your CRM for all CRM data types. Available to all accounts."
+    },
+    {
+      "name": "crm.import",
+      "legacy": false,
+      "description": "Allows you to Allows you to import records into your CRM. This includes creating new records or modifying any of your existing records for all CRM data types (contacts, companies, deals, tickets, etc). Available to all accounts. into your CRM. This includes creating new records or modifying any of your existing records for all CRM data types (contacts, companies, deals, tickets, etc). Available to all accounts."
+    },
+    {
+      "name": "crm.dealsplits.read_write",
+      "legacy": false,
+      "description": "Create or retrieve Create or retrieve deal splits on a deal. Available to ***Sales Hub*** *Enterprise* accounts only. on a deal. Available to ***Sales Hub*** *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.lists.read",
+      "legacy": false,
+      "description": "View details about contact View details about contact lists. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.lists.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to contact Create, delete, or make changes to contact lists. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.appointments.read",
+      "legacy": false,
+      "description": "View properties and other details about View properties and other details about appointments. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.appointments.sensitive.read",
+      "legacy": false,
+      "description": "View View Sensitive Data properties for appointments. Available to *Enterprise* accounts only. properties for appointments. Available to *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.appointments.sensitive.write",
+      "legacy": false,
+      "description": "Edit Edit Sensitive Data properties and values for appointments. Available to *Enterprise* accounts only. properties and values for appointments. Available to *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.appointments.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to Create, delete, or make changes to appointments. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.carts.read",
+      "legacy": false,
+      "description": "View properties and other details about View properties and other details about carts. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.carts.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to Create, delete, or make changes to carts. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.commercepayments.read",
+      "legacy": false,
+      "description": "View details about commerce View details about commerce payments. Available to *Starter* accounts only.. Available to *Starter* accounts only."
+    },
+    {
+      "name": "crm.objects.companies.highly_sensitive.read",
+      "legacy": false,
+      "description": "View View Highly Sensitive Data properties for companies. Available to *Enterprise* accounts only. properties for companies. Available to *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.companies.highly_sensitive.write",
+      "legacy": false,
+      "description": "Edit Edit Highly Sensitive Data properties and values for companies. Available to *Enterprise* accounts only. properties and values for companies. Available to *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.companies.read",
+      "legacy": false,
+      "description": "View properties and other details about View properties and other details about companies. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.companies.sensitive.read",
+      "legacy": false,
+      "description": "View View Sensitive Data properties for companies. Available to *Enterprise* accounts only. properties for companies. Available to *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.companies.sensitive.write",
+      "legacy": false,
+      "description": "Edit Edit Sensitive Data properties and values for companies. Available to *Enterprise* accounts only. properties and values for companies. Available to *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.companies.write",
+      "legacy": false,
+      "description": "View properties and create, delete, or make changes to View properties and create, delete, or make changes to companies. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.contacts.highly_sensitive.read",
+      "legacy": false,
+      "description": "View View Highly Sensitive Data properties for contacts. Available to *Enterprise* accounts only. properties for contacts. Available to *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.contacts.highly_sensitive.write",
+      "legacy": false,
+      "description": "Edit Edit Highly Sensitive Data properties and values for contacts. Available to *Enterprise* accounts only. properties and values for contacts. Available to *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.contacts.read",
+      "legacy": false,
+      "description": "View properties and other details about View properties and other details about contacts. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.contacts.sensitive.read",
+      "legacy": false,
+      "description": "View View Sensitive Data properties for contacts. Available to *Enterprise* accounts only. properties for contacts. Available to *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.contacts.sensitive.write",
+      "legacy": false,
+      "description": "Edit Edit Sensitive Data properties and values for contacts. Available to *Enterprise* accounts only. properties and values for contacts. Available to *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.contacts.write",
+      "legacy": false,
+      "description": "Create, delete, and make changes to Create, delete, and make changes to contacts. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.courses.read",
+      "legacy": false,
+      "description": "View details about View details about courses. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.courses.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to Create, delete, or make changes to courses. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.custom.highly_sensitive.read",
+      "legacy": false,
+      "description": "View View Highly Sensitive Data properties for custom objects. Available to *Enterprise* accounts only. properties for custom objects. Available to *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.custom.highly_sensitive.write",
+      "legacy": false,
+      "description": "Edit Edit Highly Sensitive Data properties and values for custom objects. Available to *Enterprise* accounts only. properties and values for custom objects. Available to *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.custom.read",
+      "legacy": false,
+      "description": "View details about View details about custom objects. Available to *Enterprise* accounts only.. Available to *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.custom.sensitive.read",
+      "legacy": false,
+      "description": "View View Sensitive Data properties for custom objects. Available to *Enterprise* accounts only. properties for custom objects. Available to *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.custom.sensitive.write",
+      "legacy": false,
+      "description": "Edit Edit Sensitive Data properties and values for custom objects. Available to *Enterprise* accounts only. properties and values for custom objects. Available to *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.custom.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to Create, delete, or make changes to custom objects. Available to *Enterprise* accounts only.. Available to *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.deals.highly_sensitive.read",
+      "legacy": false,
+      "description": "View View Highly Sensitive Data properties for deals. Available to *Enterprise* accounts only. properties for deals. Available to *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.deals.highly_sensitive.write",
+      "legacy": false,
+      "description": "Edit Edit Highly Sensitive Data properties and values for deals. Available to *Enterprise* accounts only. properties and values for deals. Available to *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.deals.read",
+      "legacy": false,
+      "description": "View properties and other details about View properties and other details about deals. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.deals.sensitive.read",
+      "legacy": false,
+      "description": "View View Sensitive Data properties for deals. Available to *Enterprise* accounts only. properties for deals. Available to *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.deals.sensitive.write",
+      "legacy": false,
+      "description": "Edit Edit Sensitive Data properties and values for deals. Available to *Enterprise* accounts only. properties and values for deals. Available to *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.deals.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to Create, delete, or make changes to deals. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.feedback_submission.read",
+      "legacy": false,
+      "description": "View details about submissions to any of your View details about submissions to any of your feedback surveys. Available to ***Service Hub*** *Professional* or *Enterprise* accounts only.. Available to ***Service Hub*** *Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.goals.read",
+      "legacy": false,
+      "description": "View all View all goals. Available to ***Sales Hub*** *Starter*, *Professional*, or *Enterprise* accounts only.. Available to ***Sales Hub*** *Starter*, *Professional*, or *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.invoices.read",
+      "legacy": false,
+      "description": "View details about View details about invoices. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.leads.read",
+      "legacy": false,
+      "description": "View properties and other details about View properties and other details about leads. Available to ***Sales Hub** Professional* or *Enterprise* accounts only.. Available to ***Sales Hub** Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.leads.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to Create, delete, or make changes to leads. Available to ***Sales Hub*** *Professional* or *Enterprise* accounts only.. Available to ***Sales Hub*** *Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.objects.line_items.read",
+      "legacy": false,
+      "description": "View properties and other details about View properties and other details about line items. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.line_items.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to Create, delete, or make changes to line items. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.listings.read",
+      "legacy": false,
+      "description": "View properties and other details about View properties and other details about listings. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.listings.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to Create, delete, or make changes to listings. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.marketing_events.read",
+      "legacy": false,
+      "description": "View details about View details about marketing events. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.marketing_events.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to Create, delete, or make changes to marketing events. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.orders.read",
+      "legacy": false,
+      "description": "View properties and other details about View properties and other details about orders. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.orders.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to Create, delete, or make changes to orders. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.owners.read",
+      "legacy": false,
+      "description": "View details about users View details about users assigned to a CRM record. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.partner-clients.read",
+      "legacy": false,
+      "description": "View details about View details about partner clients objects. Available to all accounts. objects. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.partner-clients.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to Create, delete, or make changes to partner clients objects. Available to all accounts. objects. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.partner-services.read",
+      "legacy": false,
+      "description": "View details about View details about partner service objects. Available to all accounts. objects. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.partner-services.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to Create, delete, or make changes to partner service objects. Available to all accounts. objects. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.quotes.read",
+      "legacy": false,
+      "description": "View properties and other details about View properties and other details about quotes and quote templates. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.quotes.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to Create, delete, or make changes to quotes (including legacy quotes). Available to all accounts. (including Create, delete, or make changes to quotes (including legacy quotes). Available to all accounts.). Available to all accounts."
+    },
+    {
+      "name": "crm.objects.services.read",
+      "legacy": false,
+      "description": "View properties and other details about View properties and other details about services. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.services.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to Create, delete, or make changes to services. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.subscriptions.read",
+      "legacy": false,
+      "description": "View properties and other details about View properties and other details about commerce subscriptions. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.tickets.read",
+      "legacy": false,
+      "description": "View properties and other details about View properties and other details about tickets Available to all accounts. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.tickets.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to Create, delete, or make changes to tickets Available to all accounts. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.tickets.sensitive.read",
+      "legacy": false,
+      "description": "Access to view Access to view Sensitive Data properties and values for tickets. Available to all accounts. properties and values for tickets. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.tickets.sensitive.write",
+      "legacy": false,
+      "description": "Access to edit Access to edit Sensitive Data properties and values for tickets. Available to all accounts. properties and values for tickets. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.tickets.highly_sensitive.read",
+      "legacy": false,
+      "description": "Access to view Access to view highly Sensitive Data properties and values for tickets. Available to all accounts. properties and values for tickets. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.tickets.highly_sensitive.write",
+      "legacy": false,
+      "description": "Access to edit Access to edit highly Sensitive Data properties and values for tickets. Available to all accounts. properties and values for tickets. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.users.read",
+      "legacy": false,
+      "description": "View properties and other details about View properties and other details about users. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.objects.users.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to Create, delete, or make changes to users. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.pipelines.orders.read",
+      "legacy": false,
+      "description": "View details about View details about order pipelines. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.pipelines.orders.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to Create, delete, or make changes to order pipelines. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.appointments.read",
+      "legacy": false,
+      "description": "View details about property settings for View details about property settings for appointments. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.appointments.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to property settings for Create, delete, or make changes to property settings for appointments Available to all accounts. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.carts.read",
+      "legacy": false,
+      "description": "View details about property settings for View details about property settings for carts. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.carts.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to property settings for Create, delete, or make changes to property settings for carts. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.courses.read",
+      "legacy": false,
+      "description": "View details about property settings for View details about property settings for courses. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.courses.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to property settings for Create, delete, or make changes to property settings for courses. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.commercepayments.read",
+      "legacy": false,
+      "description": "View details about property settings for View details about property settings for commerce payments. Available to *Starter* accounts only.. Available to *Starter* accounts only."
+    },
+    {
+      "name": "crm.schemas.companies.read",
+      "legacy": false,
+      "description": "View details about property settings for View details about property settings for companies Available to all accounts. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.companies.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to property settings for Create, delete, or make changes to property settings for companies. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.contacts.read",
+      "legacy": false,
+      "description": "View details about property settings for View details about property settings for contacts. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.contacts.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to property settings for Create, delete, or make changes to property settings for contacts. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.custom.read",
+      "legacy": false,
+      "description": "View details about View details about custom object definitions in the HubSpot CRM. Available to *Enterprise* accounts only. in the HubSpot CRM. Available to *Enterprise* accounts only."
+    },
+    {
+      "name": "crm.schemas.deals.read",
+      "legacy": false,
+      "description": "View details about property settings for View details about property settings for deals. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.deals.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to property settings for Create, delete, or make changes to property settings for deals. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.invoices.read",
+      "legacy": false,
+      "description": "View details about property settings for View details about property settings for invoices. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.invoices.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to property settings for Create, delete, or make changes to property settings for invoices Available to all accounts. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.line_items.read",
+      "legacy": false,
+      "description": "View details about View details about line items properties. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.listings.read",
+      "legacy": false,
+      "description": "View details about property settings for View details about property settings for listings Available to all accounts. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.listings.write",
+      "legacy": false,
+      "description": "Create, delete, or make changes to property settings for Create, delete, or make changes to property settings for listings Available to all accounts. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.orders.read",
+      "legacy": false,
+      "description": "View details about property settings for View details about property settings for orders Available to all accounts. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.orders.write",
+      "legacy": false,
+      "description": "Create, manage, or make changes to property settings for Create, manage, or make changes to property settings for orders Available to all accounts. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.quotes.read",
+      "legacy": false,
+      "description": "View details about View details about quotes and quotes templates. Available to all accounts. and View details about quotes and quotes templates. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.quotes.write",
+      "legacy": false,
+      "description": "Create, manage, or make changes to property settings for Create, manage, or make changes to property settings for quotes Available to all accounts. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.services.read",
+      "legacy": false,
+      "description": "View details about property settings for View details about property settings for services Available to all accounts. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.services.write",
+      "legacy": false,
+      "description": "Create, manage, or make changes to property settings for Create, manage, or make changes to property settings for services Available to all accounts. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.subscriptions.read",
+      "legacy": false,
+      "description": "View details about property settings for View details about property settings for commerce subscriptions. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "crm.schemas.subscriptions.write",
+      "legacy": false,
+      "description": "Create, manage, or make changes to property settings for Create, manage, or make changes to property settings for commerce subscriptions. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "external_integrations.forms.access",
+      "legacy": false,
+      "description": "Includes the ability to rename, delete, and clone existing forms when using the Includes the ability to rename, delete, and clone existing forms when using the HubSpot WordPress plugin. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "files",
+      "legacy": true,
+      "description": "A legacy scope to access, manage, and upload A legacy scope to access, manage, and upload files in the HubSpot file manager. For existing apps using this scope, it's recommended that you migrate to use the corresponding new granular scopes (e.g., `files.read`) for more control and transparency. Available to all accounts. in the HubSpot file manager. For existing apps using this scope, it's recommended that you A legacy scope to access, manage, and upload files in the HubSpot file manager. For existing apps using this scope, it's recommended that you migrate to use the corresponding new granular scopes (e.g., `files.read`) for more control and transparency. Available to all accounts. to use the corresponding new granular scopes (e.g., `files.read`) for more control and transparency. Available to all accounts."
+    },
+    {
+      "name": "files.delete",
+      "legacy": false,
+      "description": "Delete Delete files in the HubSpot file manager. Available to all accounts. in the HubSpot file manager. Available to all accounts."
+    },
+    {
+      "name": "files.read",
+      "legacy": false,
+      "description": "View details about View details about files in the HubSpot file manager. Available to all accounts. in the HubSpot file manager. Available to all accounts."
+    },
+    {
+      "name": "files.ui_hidden.read",
+      "legacy": false,
+      "description": "Access hidden or deleted Access hidden or deleted files uploaded to the HubSpot file manager. Available to all accounts. uploaded to the HubSpot file manager. Available to all accounts."
+    },
+    {
+      "name": "files.ui_hidden.write",
+      "legacy": false,
+      "description": "Manage hidden or deleted Manage hidden or deleted files uploaded to the HubSpot file manager. Available to all accounts. uploaded to the HubSpot file manager. Available to all accounts."
+    },
+    {
+      "name": "files.write",
+      "legacy": false,
+      "description": "Upload and manage Upload and manage files in the HubSpot file manager. Available to all accounts. in the HubSpot file manager. Available to all accounts."
+    },
+    {
+      "name": "forms",
+      "legacy": false,
+      "description": "Grants access to the Grants access to the legacy and v3 forms APIs Available to all accounts. and v3 Grants access to the legacy and v3 forms APIs Available to all accounts. Available to all accounts."
+    },
+    {
+      "name": "forms-uploaded-files",
+      "legacy": false,
+      "description": "Grants access to the legacy Grants access to the legacy v1 uploaded form files API Available to all accounts. Available to all accounts."
+    },
+    {
+      "name": "hubdb",
+      "legacy": true,
+      "description": "A legacy scope that provides both retrieve and manage A legacy scope that provides both retrieve and manage HubDB data. For existing apps using this scope, it's recommended that you migrate to use the corresponding new granular scopes (e.g., `hubdb.tables.read`) for more control and transparency. Available to ***CMS Hub*** *Professional* or *Enterprise*, or ***Marketing Hub*** *Professional* or *Enterprise* accounts only.. For existing apps using this scope, it's recommended that you A legacy scope that provides both retrieve and manage HubDB data. For existing apps using this scope, it's recommended that you migrate to use the corresponding new granular scopes (e.g., `hubdb.tables.read`) for more control and transparency. Available to ***CMS Hub*** *Professional* or *Enterprise*, or ***Marketing Hub*** *Professional* or *Enterprise* accounts only. to use the corresponding new granular scopes (e.g., `hubdb.tables.read`) for more control and transparency. Available to ***CMS Hub*** *Professional* or *Enterprise*, or ***Marketing Hub*** *Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "hubdb.rows.read",
+      "legacy": false,
+      "description": "Retrieve row data from Retrieve row data from HubDB. Available to ***CMS Hub*** *Professional* or *Enterprise*, or ***Marketing Hub*** *Professional* or *Enterprise* accounts only.. Available to ***CMS Hub*** *Professional* or *Enterprise*, or ***Marketing Hub*** *Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "hubdb.rows.write",
+      "legacy": false,
+      "description": "Add or modify rows in Add or modify rows in HubDB. Available to ***CMS Hub*** *Professional* or *Enterprise*, or ***Marketing Hub*** *Professional* or *Enterprise* accounts only.. Available to ***CMS Hub*** *Professional* or *Enterprise*, or ***Marketing Hub*** *Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "hubdb.tables.publish",
+      "legacy": false,
+      "description": "Publish a drafted table or unpublish an existing published Publish a drafted table or unpublish an existing published HubDB table. Available to ***CMS Hub*** *Professional* or *Enterprise*, or ***Marketing Hub*** *Professional* or *Enterprise* accounts only. table. Available to ***CMS Hub*** *Professional* or *Enterprise*, or ***Marketing Hub*** *Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "hubdb.tables.read",
+      "legacy": false,
+      "description": "Retrieve a Retrieve a HubDB table. Available to ***CMS Hub*** *Professional* or *Enterprise*, or ***Marketing Hub*** *Professional* or *Enterprise* accounts only.. Available to ***CMS Hub*** *Professional* or *Enterprise*, or ***Marketing Hub*** *Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "hubdb.tables.write",
+      "legacy": false,
+      "description": "Update, clone, or delete a Update, clone, or delete a HubDB table. Available to ***CMS Hub*** *Professional* or *Enterprise*, or ***Marketing Hub*** *Professional* or *Enterprise* accounts only.. Available to ***CMS Hub*** *Professional* or *Enterprise*, or ***Marketing Hub*** *Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "marketing.campaigns.read",
+      "legacy": false,
+      "description": "View details about View details about marketing campaigns and their associated assets. Available to ***Marketing Hub*** *Professional* or *Enterprise* accounts only. and their associated assets. Available to ***Marketing Hub*** *Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "marketing.campaigns.revenue.read",
+      "legacy": false,
+      "description": "View revenue details and deal amounts attributed to a View revenue details and deal amounts attributed to a marketing campaign. Available to ***Marketing Hub*** *Professional* or *Enterprise* accounts only.. Available to ***Marketing Hub*** *Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "marketing.campaigns.write",
+      "legacy": false,
+      "description": "Create, update, and delete Create, update, and delete marketing campaigns. Available to ***Marketing Hub*** *Professional* or *Enterprise* accounts only.. Available to ***Marketing Hub*** *Professional* or *Enterprise* accounts only."
+    },
+    {
+      "name": "marketing-email",
+      "legacy": false,
+      "description": "Grants access to retrieve and send Grants access to retrieve and send marketing emails. Publishing marketing emails using this API requires ***Marketing Hub*** *Enterprise*. Available to all accounts.. Publishing marketing emails using this API requires ***Marketing Hub*** *Enterprise*. Available to all accounts."
+    },
+    {
+      "name": "media_bridge.read",
+      "legacy": false,
+      "description": "Grants access to events and objects from the Grants access to events and objects from the media bridge API. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "media_bridge.write",
+      "legacy": false,
+      "description": "Grants access to create and update events and objects from the Grants access to create and update events and objects from the media bridge API. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "oauth",
+      "legacy": false,
+      "description": "Basic scope required for OAuth. This scope is added by default to all Basic scope required for OAuth. This scope is added by default to all apps. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "sales-email-read",
+      "legacy": false,
+      "description": "Grants access to read and manage Grants access to read and manage one-to-one email engagements Available to all accounts. Available to all accounts."
+    },
+    {
+      "name": "scheduler.meetings.meeting-link.read",
+      "legacy": false,
+      "description": "Read metadata and booking availability for Read metadata and booking availability for meeting links Available to *Professional* accounts only. Available to *Professional* accounts only."
+    },
+    {
+      "name": "settings.billing.write",
+      "legacy": false,
+      "description": "Make changes to your Make changes to your account's billing settings. This includes managing and assigning paid seats for users. Available to all accounts.. This includes managing and assigning paid seats for users. Available to all accounts."
+    },
+    {
+      "name": "settings.currencies.read",
+      "legacy": false,
+      "description": "Reads existing exchange rates along with the Reads existing exchange rates along with the current company currency associated with your HubSpot account. Available to all accounts. associated with your HubSpot account. Available to all accounts."
+    },
+    {
+      "name": "settings.currencies.write",
+      "legacy": false,
+      "description": "Create, update and delete exchange rates along with updating the Create, update and delete exchange rates along with updating the company currency associated with your HubSpot account. Available to all accounts. associated with your HubSpot account. Available to all accounts."
+    },
+    {
+      "name": "settings.users.read",
+      "legacy": false,
+      "description": "View details about View details about account users and their permissions. Available to all accounts. and their permissions. Available to all accounts."
+    },
+    {
+      "name": "settings.users.write",
+      "legacy": false,
+      "description": "Manage Manage users and user permissions on your HubSpot account. This includes creating new users, assigning permissions and roles, and deleting existing users. Available to all accounts. on your HubSpot account. This includes creating new users, assigning permissions and roles, and deleting existing users. Available to all accounts."
+    },
+    {
+      "name": "settings.users.teams.read",
+      "legacy": false,
+      "description": "See details about the See details about the teams in an account. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "settings.users.teams.write",
+      "legacy": false,
+      "description": "Assign users to Assign users to teams on your HubSpot account. Available to all accounts.. Available to all accounts."
+    },
+    {
+      "name": "tax_rates.read",
+      "legacy": false,
+      "description": "View details about View details about tax rates configured in your account. Available to all accounts. configured in your account. Available to all accounts."
+    },
+    {
+      "name": "tickets",
+      "legacy": true,
+      "description": "A legacy scope that provides both retrieve and manage A legacy scope that provides both retrieve and manage ticket data. For existing apps using this scope, it's recommended that you migrate to use the corresponding new granular scopes (e.g., `crm.objects.tickets.read`) for more control and transparency. Available to all accounts.. For existing apps using this scope, it's recommended that you A legacy scope that provides both retrieve and manage ticket data. For existing apps using this scope, it's recommended that you migrate to use the corresponding new granular scopes (e.g., `crm.objects.tickets.read`) for more control and transparency. Available to all accounts. to use the corresponding new granular scopes (e.g., `crm.objects.tickets.read`) for more control and transparency. Available to all accounts."
+    },
+    {
+      "name": "tickets.sensitive",
+      "legacy": true,
+      "description": "A legacy scope that grants access to view and edit A legacy scope that grants access to view and edit Sensitive Data properties and values for tickets. For existing apps using this scope, it's recommended that you migrate to use the corresponding new granular scopes (e.g., `crm.objects.tickets.sensitive.read`) for more control and transparency. Available to all accounts. properties and values for tickets. For existing apps using this scope, it's recommended that you A legacy scope that grants access to view and edit Sensitive Data properties and values for tickets. For existing apps using this scope, it's recommended that you migrate to use the corresponding new granular scopes (e.g., `crm.objects.tickets.sensitive.read`) for more control and transparency. Available to all accounts. to use the corresponding new granular scopes (e.g., `crm.objects.tickets.sensitive.read`) for more control and transparency. Available to all accounts."
+    },
+    {
+      "name": "tickets.highly_sensitive",
+      "legacy": true,
+      "description": "A legacy scope that grants access to view and edit A legacy scope that grants access to view and edit highly Sensitive Data properties and values for tickets. For existing apps using this scope, it's recommended that you migrate to use the corresponding new granular scopes (e.g., `crm.objects.tickets.highly_sensitive.read`) for more control and transparency. Available to all accounts. properties and values for tickets. For existing apps using this scope, it's recommended that you A legacy scope that grants access to view and edit highly Sensitive Data properties and values for tickets. For existing apps using this scope, it's recommended that you migrate to use the corresponding new granular scopes (e.g., `crm.objects.tickets.highly_sensitive.read`) for more control and transparency. Available to all accounts. to use the corresponding new granular scopes (e.g., `crm.objects.tickets.highly_sensitive.read`) for more control and transparency. Available to all accounts."
+    },
+    {
+      "name": "timeline",
+      "legacy": true,
+      "description": "A legacy scope that grants access to manage A legacy scope that grants access to manage legacy timeline events on HubSpot CRM records. For existing apps using this scope, it's recommended that you migrate to use the corresponding new granular scopes (e.g., `timeline.read`) for more control and transparency. Available to all accounts. on HubSpot CRM records. For existing apps using this scope, it's recommended that you A legacy scope that grants access to manage legacy timeline events on HubSpot CRM records. For existing apps using this scope, it's recommended that you migrate to use the corresponding new granular scopes (e.g., `timeline.read`) for more control and transparency. Available to all accounts. to use the corresponding new granular scopes (e.g., `timeline.read`) for more control and transparency. Available to all accounts."
+    },
+    {
+      "name": "transactional-email",
+      "legacy": false,
+      "description": "Access and manage Access and manage transactional emails. Available to ***Marketing Hub*** *Professional* or *Enterprise* accounts with Transactional Email Add-on only.. Available to ***Marketing Hub*** *Professional* or *Enterprise* accounts with Access and manage transactional emails. Available to ***Marketing Hub*** *Professional* or *Enterprise* accounts with Transactional Email Add-on only. only."
+    }
+  ],
+  "noCorrespondingApi": [
+    "cms.knowledge_base.articles.write",
+    "cms.knowledge_base.articles.publish",
+    "cms.knowledge_base.settings.read",
+    "cms.knowledge_base.settings.write",
+    "ctas.read"
+  ],
+  "deprecated": [
+    "accounting",
+    "actions",
+    "e-commerce",
+    "integration-sync",
+    "social"
+  ]
+}

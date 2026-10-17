@@ -7,6 +7,7 @@ clients/*/.env.*
 !clients/*/.env.example
 .pi/active-client.json
 .pi/client-session.json
+.pi/hubspot-direct/
 .pi/receipts/
 .pi/reports/
 .pi/npm/

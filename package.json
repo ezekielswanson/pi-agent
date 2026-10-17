@@ -14,7 +14,8 @@
     "typecheck": "tsc --noEmit",
     "test": "node --import tsx --test test/*.test.ts",
     "check": "npm run typecheck && npm test",
-    "test:hubspot-api-mcp": "npm test --prefix services/hubspot-api-mcp"
+    "test:hubspot-api-mcp": "npm test --prefix services/hubspot-api-mcp",
+    "hubspot:direct": "tsx src/hubspot-direct/cli.ts"
   },
   "dependencies": {
     "@notionhq/client": "^5.4.0",
