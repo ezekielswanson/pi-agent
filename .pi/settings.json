@@ -1,3 +1,7 @@
 {
-  "packages": ["npm:pi-mcp-adapter"]
+  "packages": [
+    "npm:pi-mcp-adapter",
+    "npm:pi-subagents@0.79.1",
+    "npm:pi-web-access@0.42.0"
+  ]
 }

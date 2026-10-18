@@ -51,8 +51,9 @@ npm run smoke:hubspot:live
 
 - `.pi/extensions/` — Pi tools and `/client`
 - `.pi/skills/` — workflow instructions
+- `.pi/agents/` — project subagents, including read-only `al-scout`
 - `src/` — config loader and connectors
 - `clients/` — per-client profiles, mappings, prompts, env examples
 - `.mcp.json` — HubSpot remote MCP
 
-Details: [docs/setup.md](docs/setup.md), [docs/testing.md](docs/testing.md), and [docs/acceptance.md](docs/acceptance.md).
+Details: [docs/setup.md](docs/setup.md), [docs/testing.md](docs/testing.md), [docs/acceptance.md](docs/acceptance.md), and [docs/subagents.md](docs/subagents.md).
